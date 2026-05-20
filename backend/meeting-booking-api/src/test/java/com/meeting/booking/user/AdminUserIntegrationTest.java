@@ -12,6 +12,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.delete;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.put;
@@ -106,6 +107,48 @@ class AdminUserIntegrationTest {
                         .content(body))
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.code").value(40904));
+    }
+
+    @Test
+    void adminCanDeleteUserWithoutBookings() throws Exception {
+        String username = "del_" + System.currentTimeMillis();
+        String createBody = String.format(
+                "{\"username\":\"%s\",\"role\":\"EMPLOYEE\",\"enabled\":true}",
+                username);
+        MvcResult createResult = mockMvc.perform(post("/admin/users")
+                        .header("Authorization", "Bearer " + adminToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(createBody))
+                .andExpect(status().isOk())
+                .andReturn();
+        long userId = objectMapper.readTree(createResult.getResponse().getContentAsString())
+                .get("data").get("id").asLong();
+
+        mockMvc.perform(delete("/admin/users/" + userId)
+                        .header("Authorization", "Bearer " + adminToken))
+                .andExpect(status().isOk());
+
+        mockMvc.perform(post("/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(String.format("{\"username\":\"%s\",\"password\":\"%s\"}",
+                                username, AdminUserDefaults.DEFAULT_PASSWORD)))
+                .andExpect(status().isUnauthorized());
+    }
+
+    @Test
+    void cannotDeleteSelf() throws Exception {
+        MvcResult loginResult = mockMvc.perform(post("/auth/login")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content("{\"username\":\"admin\",\"password\":\"admin123\"}"))
+                .andExpect(status().isOk())
+                .andReturn();
+        long adminId = objectMapper.readTree(loginResult.getResponse().getContentAsString())
+                .get("data").get("user").get("id").asLong();
+
+        mockMvc.perform(delete("/admin/users/" + adminId)
+                        .header("Authorization", "Bearer " + adminToken))
+                .andExpect(status().isBadRequest())
+                .andExpect(jsonPath("$.code").value(40304));
     }
 
     @Test

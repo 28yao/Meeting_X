@@ -2,8 +2,10 @@
 import { onMounted, ref } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import UserFormDialog from '../../components/admin/UserFormDialog.vue'
+import { useAuthStore } from '../../stores/auth'
 import {
   createAdminUser,
+  deleteAdminUser,
   listAdminUsers,
   resetAdminUserPassword,
   updateAdminUser,
@@ -13,6 +15,7 @@ import {
 } from '../../api/adminUser'
 import { resolveAxiosError } from '../../utils/errorMessages'
 
+const auth = useAuthStore()
 const loading = ref(false)
 const users = ref<AdminUser[]>([])
 const dialogVisible = ref(false)
@@ -95,6 +98,35 @@ function roleLabel(role: string) {
   return role === 'ADMIN' ? '管理员' : '员工'
 }
 
+function isCurrentUser(row: AdminUser) {
+  return auth.user?.id != null && auth.user.id === row.id
+}
+
+async function onDelete(row: AdminUser) {
+  if (isCurrentUser(row)) {
+    ElMessage.warning('不能删除当前登录账号')
+    return
+  }
+  try {
+    await ElMessageBox.confirm(
+      `确定删除用户「${row.username}」吗？删除后不可恢复。`,
+      '删除用户',
+      { type: 'warning', confirmButtonText: '删除', cancelButtonText: '取消' },
+    )
+    const res = await deleteAdminUser(row.id)
+    if (res.code !== 0) {
+      ElMessage.error(res.message || '删除失败')
+      return
+    }
+    ElMessage.success('用户已删除')
+    await loadUsers()
+  } catch (err) {
+    if (err !== 'cancel') {
+      ElMessage.error(resolveAxiosError(err))
+    }
+  }
+}
+
 onMounted(() => {
   loadUsers()
 })
@@ -124,10 +156,18 @@ onMounted(() => {
             </el-tag>
           </template>
         </el-table-column>
-        <el-table-column label="操作" width="180" fixed="right">
+        <el-table-column label="操作" width="240" fixed="right">
           <template #default="{ row }">
             <el-button type="primary" link @click="openEdit(row)">编辑</el-button>
             <el-button type="warning" link @click="onResetPassword(row)">重置密码</el-button>
+            <el-button
+              type="danger"
+              link
+              :disabled="isCurrentUser(row)"
+              @click="onDelete(row)"
+            >
+              删除
+            </el-button>
           </template>
         </el-table-column>
       </el-table>

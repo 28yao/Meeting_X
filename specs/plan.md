@@ -69,6 +69,11 @@
 
 **重置密码**：管理员一键恢复为默认密码 `123456`，无需输入新密码。
 
+### ADR-05：删除用户
+
+- **策略**：物理删除；先删该用户站内通知。
+- **禁止**：删除当前登录账号；删除最后一位启用的管理员；删除存在预约记录（任意状态）的用户。
+
 ---
 
 ## 4. 技术栈与约束
@@ -170,6 +175,7 @@ status = CONFIRMED
 | POST | `/admin/users` | ADMIN |
 | PUT | `/admin/users/{id}` | ADMIN |
 | POST | `/admin/users/{id}/reset-password` | ADMIN |
+| DELETE | `/admin/users/{id}` | ADMIN |
 
 ### 8.2 会议室
 

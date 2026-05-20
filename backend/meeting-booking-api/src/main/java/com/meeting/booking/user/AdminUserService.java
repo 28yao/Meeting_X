@@ -1,8 +1,11 @@
 package com.meeting.booking.user;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.meeting.booking.booking.mapper.BookingMapper;
 import com.meeting.booking.common.BusinessException;
 import com.meeting.booking.common.ErrorCodes;
+import com.meeting.booking.notification.entity.Notification;
+import com.meeting.booking.notification.mapper.NotificationMapper;
 import com.meeting.booking.user.dto.AdminUserDto;
 import com.meeting.booking.user.dto.CreateAdminUserRequest;
 import com.meeting.booking.user.dto.UpdateAdminUserRequest;
@@ -18,7 +21,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * 管理员用户管理业务服务：创建、编辑、重置密码与列表查询。
+ * 管理员用户管理业务服务：创建、编辑、删除、重置密码与列表查询。
  *
  * @author liuxinsi
  * @date 2026-05-20
@@ -30,10 +33,17 @@ public class AdminUserService {
     private static final int DISABLED = 0;
 
     private final SysUserMapper sysUserMapper;
+    private final BookingMapper bookingMapper;
+    private final NotificationMapper notificationMapper;
     private final PasswordEncoder passwordEncoder;
 
-    public AdminUserService(SysUserMapper sysUserMapper, PasswordEncoder passwordEncoder) {
+    public AdminUserService(SysUserMapper sysUserMapper,
+                            BookingMapper bookingMapper,
+                            NotificationMapper notificationMapper,
+                            PasswordEncoder passwordEncoder) {
         this.sysUserMapper = sysUserMapper;
+        this.bookingMapper = bookingMapper;
+        this.notificationMapper = notificationMapper;
         this.passwordEncoder = passwordEncoder;
     }
 
@@ -114,6 +124,36 @@ public class AdminUserService {
         SysUser user = requireUser(userId);
         user.setPasswordHash(passwordEncoder.encode(AdminUserDefaults.DEFAULT_PASSWORD));
         sysUserMapper.updateById(user);
+    }
+
+    /**
+     * 删除用户（物理删除）。不可删除当前登录账号、最后一位启用管理员，或存在预约记录的用户。
+     *
+     * @param userId           待删除用户 ID
+     * @param operatorUserId   当前操作者用户 ID
+     */
+    @Transactional(rollbackFor = Exception.class)
+    public void deleteUser(Long userId, Long operatorUserId) {
+        if (userId != null && userId.equals(operatorUserId)) {
+            throw new BusinessException(ErrorCodes.USER_CANNOT_DELETE_SELF,
+                    "不能删除当前登录账号", HttpStatus.BAD_REQUEST.value());
+        }
+        SysUser user = requireUser(userId);
+        if (UserRole.ADMIN.equals(user.getRole())
+                && user.getEnabled() != null
+                && user.getEnabled() == ENABLED
+                && sysUserMapper.countEnabledAdmins() <= 1) {
+            throw new BusinessException(ErrorCodes.LAST_ADMIN_CANNOT_DELETE,
+                    "不能删除最后一位启用的管理员", HttpStatus.BAD_REQUEST.value());
+        }
+        if (bookingMapper.countByOrganizerId(userId) > 0) {
+            throw new BusinessException(ErrorCodes.USER_HAS_BOOKINGS,
+                    "该用户存在预约记录，无法删除", HttpStatus.CONFLICT.value());
+        }
+        LambdaQueryWrapper<Notification> notificationWrapper = new LambdaQueryWrapper<Notification>()
+                .eq(Notification::getUserId, userId);
+        notificationMapper.delete(notificationWrapper);
+        sysUserMapper.deleteById(userId);
     }
 
     private String resolvePassword(String password) {

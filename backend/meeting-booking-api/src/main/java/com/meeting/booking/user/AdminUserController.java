@@ -1,10 +1,13 @@
 package com.meeting.booking.user;
 
+import com.meeting.booking.auth.LoginUserPrincipal;
 import com.meeting.booking.common.ApiResponse;
 import com.meeting.booking.user.dto.AdminUserDto;
 import com.meeting.booking.user.dto.CreateAdminUserRequest;
 import com.meeting.booking.user.dto.UpdateAdminUserRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -77,6 +80,21 @@ public class AdminUserController {
     @PostMapping("/{id}/reset-password")
     public ApiResponse<Void> resetPassword(@PathVariable("id") Long id) {
         adminUserService.resetPassword(id);
+        return ApiResponse.success(null);
+    }
+
+    /**
+     * 删除用户。
+     *
+     * @param id        用户 ID
+     * @param principal 当前登录管理员
+     * @return 空成功响应
+     */
+    @DeleteMapping("/{id}")
+    public ApiResponse<Void> delete(
+            @PathVariable("id") Long id,
+            @AuthenticationPrincipal LoginUserPrincipal principal) {
+        adminUserService.deleteUser(id, principal.getUserId());
         return ApiResponse.success(null);
     }
 }

@@ -168,6 +168,7 @@
 | POST | `/admin/users` | 创建用户（默认密码 123456、显示名=账号） |
 | PUT | `/admin/users/{id}` | 编辑用户 |
 | POST | `/admin/users/{id}/reset-password` | 重置为默认密码 123456 |
+| DELETE | `/admin/users/{id}` | 删除用户 |
 
 ### 9.5 通知
 

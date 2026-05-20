@@ -36,7 +36,7 @@ function onLogout() {
       </nav>
       <div class="layout-actions">
         <span class="layout-user">你好，{{ displayName }}</span>
-        <el-button type="primary" link @click="onLogout">退出</el-button>
+        <el-button class="logout-btn" link @click="onLogout">退出登录</el-button>
       </div>
     </el-header>
     <el-main class="layout-main">
@@ -93,6 +93,15 @@ function onLogout() {
 
 .layout-user {
   font-size: 14px;
+}
+
+.logout-btn {
+  color: #fff !important;
+  font-weight: 500;
+}
+
+.logout-btn:hover {
+  color: #e6f4ff !important;
 }
 
 .layout-main {

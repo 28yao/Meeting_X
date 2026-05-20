@@ -45,3 +45,8 @@ export async function resetAdminUserPassword(id: number): Promise<ApiResponse<nu
   const res = await http.post<ApiResponse<null>>(`/admin/users/${id}/reset-password`)
   return res.data
 }
+
+export async function deleteAdminUser(id: number): Promise<ApiResponse<null>> {
+  const res = await http.delete<ApiResponse<null>>(`/admin/users/${id}`)
+  return res.data
+}

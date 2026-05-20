@@ -87,6 +87,7 @@ GET http://localhost:8080/api/v1/health
 | POST | `/admin/users` | 创建用户。Body：`{username,role,enabled?}`；密码默认 `123456`，显示名默认等于账号 |
 | PUT | `/admin/users/{id}` | 编辑用户（显示名、角色、启用状态） |
 | POST | `/admin/users/{id}/reset-password` | 重置为默认密码 `123456`（无需 body） |
+| DELETE | `/admin/users/{id}` | 删除用户（不可删自己、末位启用管理员、有预约记录者） |
 
 ## 站内通知接口（模块 5，需登录）
 

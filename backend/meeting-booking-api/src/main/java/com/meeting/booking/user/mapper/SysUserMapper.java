@@ -26,4 +26,17 @@ public interface SysUserMapper extends BaseMapper<SysUser> {
                 .last("LIMIT 1");
         return selectOne(wrapper);
     }
+
+    /**
+     * 统计已启用的管理员数量。
+     *
+     * @return 启用中的 ADMIN 用户数
+     */
+    default long countEnabledAdmins() {
+        LambdaQueryWrapper<SysUser> wrapper = new LambdaQueryWrapper<SysUser>()
+                .eq(SysUser::getRole, "ADMIN")
+                .eq(SysUser::getEnabled, 1);
+        Long count = selectCount(wrapper);
+        return count == null ? 0L : count.longValue();
+    }
 }

@@ -22,6 +22,9 @@ public final class ErrorCodes {
     public static final int NOTIFICATION_NOT_FOUND = 40403;
     public static final int USER_NOT_FOUND = 40404;
     public static final int USERNAME_ALREADY_EXISTS = 40904;
+    public static final int USER_HAS_BOOKINGS = 40905;
+    public static final int USER_CANNOT_DELETE_SELF = 40304;
+    public static final int LAST_ADMIN_CANNOT_DELETE = 40305;
 
     private ErrorCodes() {
     }

@@ -79,4 +79,13 @@ public interface BookingMapper extends BaseMapper<Booking> {
             + "WHERE id = #{bookingId} AND organizer_id = #{organizerId} AND status = 'CONFIRMED'")
     int updateStatusToCancelled(@Param("bookingId") Long bookingId,
                                 @Param("organizerId") Long organizerId);
+
+    /**
+     * 统计某用户作为组织者的预约条数（含已取消）。
+     *
+     * @param organizerId 组织者用户 ID
+     * @return 预约条数
+     */
+    @Select("SELECT COUNT(1) FROM booking WHERE organizer_id = #{organizerId}")
+    int countByOrganizerId(@Param("organizerId") Long organizerId);
 }

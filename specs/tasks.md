@@ -495,7 +495,7 @@ INSERT `notification`；UPDATE `read_flag`。
 
 - `/admin/users`：用户表格（账号、显示名、角色、是否启用）。
 - 「新建用户」对话框：仅需填写 username、role（初始密码默认 `123456`，显示名默认等于账号）。
-- 行操作：编辑、重置密码（恢复默认密码 `123456`）。
+- 行操作：编辑、重置密码（恢复默认密码 `123456`）、删除（不可删自己/末位管理员/有预约用户）。
 
 ## 3. 用户操作流程
 
@@ -542,6 +542,7 @@ INSERT/UPDATE `sys_user`（password_hash BCrypt）。
 | 2 | 新建员工账号（仅填账号与角色） | 列表多一行，默认密码 123456 |
 | 3 | 用新账号登录（123456） | 成功进入员工界面 |
 | 4 | 重置密码 | 确认后可用 123456 登录 |
+| 5 | 删除无预约的新建用户 | 列表中消失 |
 
 ## 10. 接口测试方法
 
@@ -563,7 +564,7 @@ INSERT/UPDATE `sys_user`（password_hash BCrypt）。
 
 | 项 | 说明 |
 |----|------|
-| 后端接口 | GET/POST/PUT `/admin/users`；POST reset-password |
+| 后端接口 | GET/POST/PUT/DELETE `/admin/users`；POST reset-password |
 | 数据保存 | `sys_user` |
 | 失败层级 | 权限 / 唯一约束 / Service 校验 |
 | 前端路由 | `/admin/users`（仅 ADMIN） |
