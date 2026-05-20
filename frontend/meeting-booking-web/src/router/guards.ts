@@ -1,4 +1,5 @@
 import type { Router } from 'vue-router'
+import { ElMessage } from 'element-plus'
 import { useAuthStore } from '../stores/auth'
 
 /**
@@ -30,6 +31,12 @@ export function setupRouterGuards(router: Router) {
         next({ name: 'login', query: { redirect: to.fullPath } })
         return
       }
+    }
+
+    if (to.meta.requiresAdmin && auth.user?.role !== 'ADMIN') {
+      ElMessage.warning('无权限访问该页面')
+      next({ name: 'book' })
+      return
     }
 
     next()

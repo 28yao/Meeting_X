@@ -11,7 +11,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.time.LocalDate;
+import com.meeting.booking.support.BookingTestSlots;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -50,7 +51,7 @@ class BookingMineIntegrationTest {
 
     @Test
     void listMineAndCancelSuccess() throws Exception {
-        LocalDateTime start = uniqueSlot("mine-cancel");
+        LocalDateTime start = BookingTestSlots.nextStart();
         LocalDateTime end = start.plusMinutes(30);
         String createBody = buildCreateBody(1L, "我的预约测试", start, end);
         MvcResult createResult = mockMvc.perform(post("/bookings")
@@ -91,12 +92,6 @@ class BookingMineIntegrationTest {
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().isForbidden())
                 .andExpect(jsonPath("$.code").value(40303));
-    }
-
-    private LocalDateTime uniqueSlot(String salt) {
-        int slotIndex = Math.abs(salt.hashCode() + (int) (System.nanoTime() % 10000)) % 24;
-        int minutes = 9 * 60 + slotIndex * 15;
-        return LocalDate.now().plusDays(2).atStartOfDay().plusMinutes(minutes);
     }
 
     private JsonNode findItemByBookingId(JsonNode items, long bookingId) {

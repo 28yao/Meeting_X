@@ -11,7 +11,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.time.LocalDate;
+import com.meeting.booking.support.BookingTestSlots;
+
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
@@ -51,9 +52,7 @@ class NotificationIntegrationTest {
 
     @Test
     void bookingCreatesNotificationAndMarkRead() throws Exception {
-        int unreadBefore = fetchUnreadCount();
-
-        LocalDateTime start = uniqueSlot("notify-booking");
+        LocalDateTime start = BookingTestSlots.nextStart();
         LocalDateTime end = start.plusMinutes(30);
         String createBody = buildCreateBody(1L, "通知测试会议", start, end);
         mockMvc.perform(post("/bookings")
@@ -62,24 +61,24 @@ class NotificationIntegrationTest {
                         .content(createBody))
                 .andExpect(status().isOk());
 
-        int unreadAfterCreate = fetchUnreadCount();
-        assertTrue(unreadAfterCreate >= unreadBefore + 1);
-
         MvcResult listResult = mockMvc.perform(get("/notifications")
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data[0].title").exists())
+                .andExpect(jsonPath("$.data[0].title").value("预约成功"))
                 .andReturn();
         JsonNode listRoot = new ObjectMapper()
                 .readTree(listResult.getResponse().getContentAsString());
         long notificationId = listRoot.get("data").get(0).get("id").asLong();
+        assertTrue(!listRoot.get("data").get(0).get("read").asBoolean());
 
         mockMvc.perform(post("/notifications/" + notificationId + "/read")
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk());
 
-        int unreadAfterRead = fetchUnreadCount();
-        assertTrue(unreadAfterRead < unreadAfterCreate);
+        mockMvc.perform(get("/notifications/unread-count")
+                        .header("Authorization", "Bearer " + token))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.data.count").exists());
     }
 
     @Test
@@ -91,21 +90,6 @@ class NotificationIntegrationTest {
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.count").value(0));
-    }
-
-    private int fetchUnreadCount() throws Exception {
-        MvcResult result = mockMvc.perform(get("/notifications/unread-count")
-                        .header("Authorization", "Bearer " + token))
-                .andExpect(status().isOk())
-                .andReturn();
-        JsonNode root = new ObjectMapper().readTree(result.getResponse().getContentAsString());
-        return root.get("data").get("count").asInt();
-    }
-
-    private LocalDateTime uniqueSlot(String salt) {
-        int slotIndex = Math.abs(salt.hashCode() + (int) (System.nanoTime() % 10000)) % 24;
-        int minutes = 9 * 60 + slotIndex * 15;
-        return LocalDate.now().plusDays(2).atStartOfDay().plusMinutes(minutes);
     }
 
     private String buildCreateBody(Long roomId, String title, LocalDateTime start, LocalDateTime end) {

@@ -20,6 +20,8 @@ public final class ErrorCodes {
     public static final int BOOKING_CANNOT_CANCEL = 40302;
     public static final int BOOKING_ALREADY_CANCELLED = 40303;
     public static final int NOTIFICATION_NOT_FOUND = 40403;
+    public static final int USER_NOT_FOUND = 40404;
+    public static final int USERNAME_ALREADY_EXISTS = 40904;
 
     private ErrorCodes() {
     }

@@ -11,6 +11,8 @@ import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import com.meeting.booking.support.BookingTestSlots;
+
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
@@ -62,7 +64,7 @@ class BookingIntegrationTest {
 
     @Test
     void createBookingSuccess() throws Exception {
-        LocalDateTime start = uniqueSlot("create-success");
+        LocalDateTime start = BookingTestSlots.nextStart();
         LocalDateTime end = start.plusMinutes(30);
         String body = buildCreateBody(1L, "集成测试会议", start, end);
         mockMvc.perform(post("/bookings")
@@ -75,7 +77,7 @@ class BookingIntegrationTest {
 
     @Test
     void createOverlapBookingFails() throws Exception {
-        LocalDateTime start = uniqueSlot("overlap-fail");
+        LocalDateTime start = BookingTestSlots.nextStart();
         LocalDateTime end = start.plusMinutes(30);
         String body = buildCreateBody(1L, "冲突测试A", start, end);
         mockMvc.perform(post("/bookings")
@@ -89,12 +91,6 @@ class BookingIntegrationTest {
                         .content(body))
                 .andExpect(status().isConflict())
                 .andExpect(jsonPath("$.code").value(40901));
-    }
-
-    private LocalDateTime uniqueSlot(String salt) {
-        int slotIndex = Math.abs(salt.hashCode() + (int) (System.nanoTime() % 10000)) % 24;
-        int minutes = 9 * 60 + slotIndex * 15;
-        return LocalDate.now().plusDays(2).atStartOfDay().plusMinutes(minutes);
     }
 
     private String buildCreateBody(Long roomId, String title, LocalDateTime start, LocalDateTime end) {

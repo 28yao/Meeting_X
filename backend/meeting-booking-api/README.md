@@ -76,6 +76,17 @@ GET http://localhost:8080/api/v1/health
 | 40302 | 已开始/结束不可取消 |
 | 40303 | 预约已取消 |
 | 40402 | 预约不存在 |
+| 40404 | 用户不存在 |
+| 40904 | 登录账号已存在 |
+
+## 管理员用户接口（模块 6，需 ADMIN 角色）
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | `/admin/users` | 用户列表 |
+| POST | `/admin/users` | 创建用户 |
+| PUT | `/admin/users/{id}` | 编辑用户（显示名、角色、启用状态） |
+| POST | `/admin/users/{id}/reset-password` | 重置密码，body: `{password}` |
 
 ## 站内通知接口（模块 5，需登录）
 

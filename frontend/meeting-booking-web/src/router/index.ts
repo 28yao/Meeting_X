@@ -49,6 +49,18 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
+  {
+    path: '/admin/users',
+    component: MainLayout,
+    children: [
+      {
+        path: '',
+        name: 'admin-users',
+        component: () => import('../views/admin/AdminUsersView.vue'),
+        meta: { title: '用户管理', requiresAdmin: true },
+      },
+    ],
+  },
 ]
 
 const router = createRouter({

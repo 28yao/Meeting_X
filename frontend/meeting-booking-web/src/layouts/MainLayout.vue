@@ -11,6 +11,7 @@ const auth = useAuthStore()
 const notificationStore = useNotificationStore()
 
 const displayName = computed(() => auth.user?.displayName || auth.user?.username || '')
+const isAdmin = computed(() => auth.user?.role === 'ADMIN')
 
 onMounted(() => {
   notificationStore.refreshUnreadCount()
@@ -31,6 +32,7 @@ function onLogout() {
         <router-link class="nav-link" to="/book">预约会议室</router-link>
         <router-link class="nav-link" to="/my-bookings">我的预约</router-link>
         <NotificationBadge />
+        <router-link v-if="isAdmin" class="nav-link" to="/admin/users">用户管理</router-link>
       </nav>
       <div class="layout-actions">
         <span class="layout-user">你好，{{ displayName }}</span>

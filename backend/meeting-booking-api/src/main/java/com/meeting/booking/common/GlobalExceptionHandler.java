@@ -4,6 +4,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
 import org.springframework.validation.BindException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -20,6 +21,7 @@ public class GlobalExceptionHandler {
 
     private static final int CODE_INTERNAL_ERROR = 50000;
     private static final int CODE_VALIDATION_ERROR = 40000;
+    private static final int CODE_FORBIDDEN = 40300;
 
     private static final Logger LOG = LoggerFactory.getLogger(GlobalExceptionHandler.class);
 
@@ -29,6 +31,12 @@ public class GlobalExceptionHandler {
      * @param ex 业务异常
      * @return 统一错误响应
      */
+    @ExceptionHandler(AccessDeniedException.class)
+    public ResponseEntity<ApiResponse<Void>> handleAccessDenied(AccessDeniedException ex) {
+        ApiResponse<Void> body = ApiResponse.fail(CODE_FORBIDDEN, "无权限访问");
+        return ResponseEntity.status(HttpStatus.FORBIDDEN).body(body);
+    }
+
     @ExceptionHandler(BusinessException.class)
     public ResponseEntity<ApiResponse<Void>> handleBusinessException(BusinessException ex) {
         ApiResponse<Void> body = ApiResponse.fail(ex.getCode(), ex.getMessage());

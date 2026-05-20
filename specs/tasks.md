@@ -18,7 +18,7 @@
 | 3. 会议室预约（员工） | P0 | 已完成 |
 | 4. 我的预约 | P0 | 已完成 |
 | 5. 站内通知 | P1 | 已完成 |
-| 6. 管理员 — 用户管理 | P0 | 未开始 |
+| 6. 管理员 — 用户管理 | P0 | 已完成 |
 | 7. 管理员 — 会议室管理 | P0 | 未开始 |
 | 8. 管理员 — 预约管理 | P0 | 未开始 |
 
@@ -507,28 +507,28 @@ INSERT `notification`；UPDATE `read_flag`。
 
 | ID | 任务 | 主文件 | 前置依赖 | 验收方式 | 状态 |
 |----|------|--------|----------|----------|------|
-| M6-F-01 | AdminUsersView 表格与分页 | `frontend/.../views/admin/AdminUsersView.vue` | M6-F-02 | 仅 ADMIN 可访问 | 未开始 |
-| M6-F-02 | admin user API | `frontend/.../api/adminUser.ts` | M6-C-01 | CRUD 调通 | 未开始 |
-| M6-F-03 | 新建/编辑用户对话框 | `frontend/.../components/admin/UserFormDialog.vue` | M6-F-01 | 必填校验 | 未开始 |
-| M6-F-04 | 路由与菜单 ADMIN 权限 | `frontend/.../router/index.ts` | M2-F-04 | 员工访问 /admin/users 被拒绝 | 未开始 |
+| M6-F-01 | AdminUsersView 表格与分页 | `frontend/.../views/admin/AdminUsersView.vue` | M6-F-02 | 仅 ADMIN 可访问 | 已完成 |
+| M6-F-02 | admin user API | `frontend/.../api/adminUser.ts` | M6-C-01 | CRUD 调通 | 已完成 |
+| M6-F-03 | 新建/编辑用户对话框 | `frontend/.../components/admin/UserFormDialog.vue` | M6-F-01 | 必填校验 | 已完成 |
+| M6-F-04 | 路由与菜单 ADMIN 权限 | `frontend/.../router/index.ts` | M2-F-04 | 员工访问 /admin/users 被拒绝 | 已完成 |
 
 ## 5. Controller 任务
 
 | ID | 任务 | 主文件 | 前置依赖 | 验收方式 | 状态 |
 |----|------|--------|----------|----------|------|
-| M6-C-01 | AdminUserController CRUD+reset | `backend/.../user/AdminUserController.java` | M6-S-01 | @PreAuthorize ADMIN | 未开始 |
+| M6-C-01 | AdminUserController CRUD+reset | `backend/.../user/AdminUserController.java` | M6-S-01 | @PreAuthorize ADMIN | 已完成 |
 
 ## 6. Service 任务
 
 | ID | 任务 | 主文件 | 前置依赖 | 验收方式 | 状态 |
 |----|------|--------|----------|----------|------|
-| M6-S-01 | AdminUserService 创建加密密码 | `backend/.../user/AdminUserService.java` | M2-M-01 | 新用户可登录 | 未开始 |
+| M6-S-01 | AdminUserService 创建加密密码 | `backend/.../user/AdminUserService.java` | M2-M-01 | 新用户可登录 | 已完成 |
 
 ## 7. Mapper 任务
 
 | ID | 任务 | 主文件 | 前置依赖 | 验收方式 | 状态 |
 |----|------|--------|----------|----------|------|
-| M6-M-01 | SysUserMapper insert/update | `backend/.../user/mapper/SysUserMapper.java` | M2-M-01 | 参数化写入 | 未开始 |
+| M6-M-01 | SysUserMapper insert/update | `backend/.../user/mapper/SysUserMapper.java` | M2-M-01 | 参数化写入 | 已完成 |
 
 ## 8. Repository / 数据保存任务
 
@@ -558,13 +558,14 @@ INSERT/UPDATE `sys_user`（password_hash BCrypt）。
 
 ## 12. 当前状态
 
-**未开始。**
+**已完成。** `mvn test`（含 `AdminUserIntegrationTest`）与 `npm run build` 已通过。
 
 | 项 | 说明 |
 |----|------|
 | 后端接口 | GET/POST/PUT `/admin/users`；POST reset-password |
 | 数据保存 | `sys_user` |
 | 失败层级 | 权限 / 唯一约束 / Service 校验 |
+| 前端路由 | `/admin/users`（仅 ADMIN） |
 
 **待确认：** spec §14 是否扩展用户字段（工号、部门等）；当前 plan ADR-04 仅四字段。
 
