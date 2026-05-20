@@ -15,7 +15,7 @@
 |------|--------|----------|
 | 1. 项目脚手架与基础设施 | P0 | 已完成 |
 | 2. 用户登录认证 | P0 | 已完成 |
-| 3. 会议室预约（员工） | P0 | 未开始 |
+| 3. 会议室预约（员工） | P0 | 已完成 |
 | 4. 我的预约 | P0 | 未开始 |
 | 5. 站内通知 | P1 | 未开始 |
 | 6. 管理员 — 用户管理 | P0 | 未开始 |
@@ -235,43 +235,43 @@
 
 | ID | 任务 | 主文件 | 前置依赖 | 验收方式 | 状态 |
 |----|------|--------|----------|----------|------|
-| M3-F-01 | BookView 步骤1：日期时段表单 | `frontend/.../views/BookView.vue` | M2-F-04 | 仅选时间可下一步 | 未开始 |
-| M3-F-02 | BookView 步骤2：空闲房间列表 | `frontend/.../views/book/AvailableRoomsStep.vue` | M3-F-03 | 有数据时展示房间卡片 | 未开始 |
-| M3-F-03 | room API：getAvailableRooms | `frontend/.../api/room.ts` | M3-B-C-01 | 参数 date/start/end 正确 | 未开始 |
-| M3-F-04 | BookView 步骤3：主题与确认 | `frontend/.../views/book/ConfirmStep.vue` | M3-F-02 | 主题必填校验 | 未开始 |
-| M3-F-05 | booking API：createBooking | `frontend/.../api/booking.ts` | M3-C-01 | POST 成功跳转或提示 | 未开始 |
-| M3-F-06 | 错误码映射为用户可读文案 | `frontend/.../utils/errorMessages.ts` | M1-B-04 | 40901 等显示中文 | 未开始 |
+| M3-F-01 | BookView 步骤1：日期时段表单 | `frontend/.../views/BookView.vue` | M2-F-04 | 仅选时间可下一步 | 已完成 |
+| M3-F-02 | BookView 步骤2：空闲房间列表 | `frontend/.../views/book/AvailableRoomsStep.vue` | M3-F-03 | 有数据时展示房间卡片 | 已完成 |
+| M3-F-03 | room API：getAvailableRooms | `frontend/.../api/room.ts` | M3-B-C-01 | 参数 date/start/end 正确 | 已完成 |
+| M3-F-04 | BookView 步骤3：主题与确认 | `frontend/.../views/book/ConfirmStep.vue` | M3-F-02 | 主题必填校验 | 已完成 |
+| M3-F-05 | booking API：createBooking | `frontend/.../api/booking.ts` | M3-C-01 | POST 成功跳转或提示 | 已完成 |
+| M3-F-06 | 错误码映射为用户可读文案 | `frontend/.../utils/errorMessages.ts` | M1-B-04 | 40901 等显示中文 | 已完成 |
 
 ## 5. Controller 任务
 
 | ID | 任务 | 主文件 | 前置依赖 | 验收方式 | 状态 |
 |----|------|--------|----------|----------|------|
-| M3-C-01 | POST /api/v1/bookings | `backend/.../booking/BookingController.java` | M3-S-03 | 合法 body 返回 201/200 | 未开始 |
-| M3-C-02 | GET /api/v1/rooms/available | `backend/.../room/RoomController.java` | M3-S-04 | 返回空闲房列表 | 未开始 |
-| M3-C-03 | GET /api/v1/rooms/{id}/occupancy | `backend/.../room/RoomController.java` | M3-S-05 | 返回当日占用片段 | 未开始 |
+| M3-C-01 | POST /api/v1/bookings | `backend/.../booking/BookingController.java` | M3-S-03 | 合法 body 返回 201/200 | 已完成 |
+| M3-C-02 | GET /api/v1/rooms/available | `backend/.../room/RoomController.java` | M3-S-04 | 返回空闲房列表 | 已完成 |
+| M3-C-03 | GET /api/v1/rooms/{id}/occupancy | `backend/.../room/RoomController.java` | M3-S-05 | 返回当日占用片段 | 已完成 |
 
 ## 6. Service 任务
 
 | ID | 任务 | 主文件 | 前置依赖 | 验收方式 | 状态 |
 |----|------|--------|----------|----------|------|
-| M3-S-01 | TimeValidator（TR-01～05） | `backend/.../booking/TimeValidator.java` | 无 | 单测覆盖 5 条规则 | 未开始 |
-| M3-S-02 | BookingConflictChecker overlap 查询 | `backend/.../booking/BookingConflictChecker.java` | M3-M-02 | 单测重叠/相邻不冲突 | 未开始 |
-| M3-S-03 | BookingService.create 事务+并发 | `backend/.../booking/BookingService.java` | M3-S-01,M3-S-02 | 并发测试仅 1 成功 | 未开始 |
-| M3-S-04 | RoomAvailabilityService 空闲列表 | `backend/.../room/RoomAvailabilityService.java` | M3-M-01 | 维护中房间不出现 | 未开始 |
-| M3-S-05 | RoomOccupancyService 占用片段 DTO | `backend/.../room/RoomOccupancyService.java` | M3-M-02 | 他人预约含主题+组织者 | 未开始 |
+| M3-S-01 | TimeValidator（TR-01～05） | `backend/.../booking/TimeValidator.java` | 无 | 单测覆盖 5 条规则 | 已完成 |
+| M3-S-02 | BookingConflictChecker overlap 查询 | `backend/.../booking/BookingConflictChecker.java` | M3-M-02 | 单测重叠/相邻不冲突 | 已完成 |
+| M3-S-03 | BookingService.create 事务+并发 | `backend/.../booking/BookingService.java` | M3-S-01,M3-S-02 | 并发测试仅 1 成功 | 已完成 |
+| M3-S-04 | RoomAvailabilityService 空闲列表 | `backend/.../room/RoomAvailabilityService.java` | M3-M-01 | 维护中房间不出现 | 已完成 |
+| M3-S-05 | RoomOccupancyService 占用片段 DTO | `backend/.../room/RoomOccupancyService.java` | M3-M-02 | 他人预约含主题+组织者 | 已完成 |
 
 ## 7. Mapper 任务
 
 | ID | 任务 | 主文件 | 前置依赖 | 验收方式 | 状态 |
 |----|------|--------|----------|----------|------|
-| M3-M-01 | MeetingRoomMapper | `backend/.../room/mapper/MeetingRoomMapper.java` | M1-D-01 | 查 NORMAL 房间 | 未开始 |
-| M3-M-02 | BookingMapper 含 overlap 查询 | `backend/.../booking/mapper/BookingMapper.java` | M1-D-01 | SQL 参数化 overlap | 未开始 |
+| M3-M-01 | MeetingRoomMapper | `backend/.../room/mapper/MeetingRoomMapper.java` | M1-D-01 | 查 NORMAL 房间 | 已完成 |
+| M3-M-02 | BookingMapper 含 overlap 查询 | `backend/.../booking/mapper/BookingMapper.java` | M1-D-01 | SQL 参数化 overlap | 已完成 |
 
 ## 8. Repository / 数据保存任务
 
 | ID | 任务 | 主文件 | 前置依赖 | 验收方式 | 状态 |
 |----|------|--------|----------|----------|------|
-| M3-R-01 | Booking 实体与插入 | `backend/.../booking/entity/Booking.java` | M1-D-01 | 创建后 booking 表有 CONFIRMED 行 | 未开始 |
+| M3-R-01 | Booking 实体与插入 | `backend/.../booking/entity/Booking.java` | M1-D-01 | 创建后 booking 表有 CONFIRMED 行 | 已完成 |
 
 ## 9. 页面测试方法
 
@@ -303,13 +303,14 @@
 
 ## 12. 当前状态
 
-**未开始。**
+**已完成。** `mvn test`（含 `TimeValidatorTest`、`BookingIntegrationTest`）与 `npm run build` 已通过。
 
 | 项 | 说明 |
 |----|------|
 | 后端接口 | GET `/rooms/available`；GET `/rooms/{id}/occupancy`；POST `/bookings` |
 | 数据保存 | `booking` 表 INSERT |
 | 失败层级 | 前端校验 / TimeValidator / 冲突检测 / 房间状态 / 数据库 |
+| 前端路由 | `/book` 三步预约向导（`BookView.vue`） |
 
 ---
 

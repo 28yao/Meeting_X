@@ -20,7 +20,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: '',
         name: 'book',
-        component: () => import('../views/BookPlaceholder.vue'),
+        component: () => import('../views/BookView.vue'),
         meta: { title: '预约会议室' },
       },
     ],

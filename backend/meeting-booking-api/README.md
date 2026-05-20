@@ -54,6 +54,26 @@ GET http://localhost:8080/api/v1/health
 | POST | `/auth/login` | 登录，body: `{username,password}` |
 | GET | `/auth/me` | 当前用户（Header: `Authorization: Bearer <token>`） |
 
+## 预约接口（模块 3，需登录）
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | `/rooms/available` | 查询空闲会议室。Query：`date`（yyyy-MM-dd）、`startTime`、`endTime`（HH:mm，15 分钟对齐） |
+| GET | `/rooms/{id}/occupancy` | 某日占用片段。Query：`date` |
+| POST | `/bookings` | 创建预约。Body：`{roomId,title,startTime,endTime}`，时间为 ISO `YYYY-MM-DDTHH:mm:ss` |
+
+### 业务错误码（节选）
+
+| code | 含义 |
+|------|------|
+| 40001 | 结束时间不晚于开始时间 |
+| 40002 | 跨天预约 |
+| 40003 | 时间未按 15 分钟对齐 |
+| 40004 | 预约过去时间 |
+| 40005 | 超过提前 30 天 |
+| 40901 | 时段冲突 |
+| 40902 | 会议室维护中 |
+
 ## 种子数据
 
 | 账号 | 密码 | 角色 |
@@ -66,6 +86,6 @@ GET http://localhost:8080/api/v1/health
 
 ```bash
 mvn compile          # 编译
-mvn test             # 单元测试（含健康检查，不依赖数据库）
+mvn test             # 单元/集成测试（需本机 MySQL meeting_booking）
 mvn spring-boot:run  # 启动（需 MySQL）
 ```

@@ -20,6 +20,9 @@ function onLogout() {
     <el-header class="layout-header">
       <span class="layout-title">会议室预约系统</span>
       <span v-if="route.meta.title" class="layout-subtitle">{{ route.meta.title }}</span>
+      <nav class="layout-nav">
+        <router-link class="nav-link" to="/book">预约会议室</router-link>
+      </nav>
       <div class="layout-actions">
         <span class="layout-user">你好，{{ displayName }}</span>
         <el-button type="primary" link @click="onLogout">退出</el-button>
@@ -52,6 +55,22 @@ function onLogout() {
 .layout-subtitle {
   font-size: 14px;
   opacity: 0.9;
+}
+
+.layout-nav {
+  display: flex;
+  gap: 16px;
+}
+
+.nav-link {
+  color: #fff;
+  text-decoration: none;
+  font-size: 14px;
+}
+
+.nav-link.router-link-active {
+  font-weight: 600;
+  text-decoration: underline;
 }
 
 .layout-actions {
