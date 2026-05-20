@@ -4,6 +4,7 @@ import com.meeting.booking.common.ApiResponse;
 import com.meeting.booking.room.dto.MeetingRoomDto;
 import com.meeting.booking.room.dto.OccupancySlotDto;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,11 +27,25 @@ public class RoomController {
 
     private final RoomAvailabilityService roomAvailabilityService;
     private final RoomOccupancyService roomOccupancyService;
+    private final MeetingRoomAdminService meetingRoomAdminService;
 
     public RoomController(RoomAvailabilityService roomAvailabilityService,
-                          RoomOccupancyService roomOccupancyService) {
+                          RoomOccupancyService roomOccupancyService,
+                          MeetingRoomAdminService meetingRoomAdminService) {
         this.roomAvailabilityService = roomAvailabilityService;
         this.roomOccupancyService = roomOccupancyService;
+        this.meetingRoomAdminService = meetingRoomAdminService;
+    }
+
+    /**
+     * 查询全部会议室列表（仅管理员）。
+     *
+     * @return 会议室列表
+     */
+    @GetMapping
+    @PreAuthorize("hasRole('ADMIN')")
+    public ApiResponse<List<MeetingRoomDto>> listAll() {
+        return ApiResponse.success(meetingRoomAdminService.listRooms());
     }
 
     /**

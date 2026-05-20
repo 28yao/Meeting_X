@@ -78,6 +78,7 @@ GET http://localhost:8080/api/v1/health
 | 40402 | 预约不存在 |
 | 40404 | 用户不存在 |
 | 40904 | 登录账号已存在 |
+| 40903 | 会议室有未来预约不可删除 |
 
 ## 管理员用户接口（模块 6，需 ADMIN 角色）
 
@@ -88,6 +89,18 @@ GET http://localhost:8080/api/v1/health
 | PUT | `/admin/users/{id}` | 编辑用户（显示名、角色、启用状态） |
 | POST | `/admin/users/{id}/reset-password` | 重置为默认密码 `123456`（无需 body） |
 | DELETE | `/admin/users/{id}` | 删除用户（不可删自己、末位启用管理员、有预约记录者） |
+
+## 管理员会议室接口（模块 7，需 ADMIN 角色）
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | `/admin/rooms` 或 `/rooms` | 会议室列表（未逻辑删除） |
+| POST | `/admin/rooms` | 新增。Body：`{name,capacity,floor?,roomType?,equipment?}` |
+| PUT | `/admin/rooms/{id}` | 编辑信息 |
+| PATCH | `/admin/rooms/{id}/status` | 设状态。Body：`{status}`，`NORMAL` / `MAINTENANCE` |
+| DELETE | `/admin/rooms/{id}` | 逻辑删除；有未来 CONFIRMED 预约返回 40903 |
+
+维护中的会议室不会出现在 `GET /rooms/available`。
 
 ## 站内通知接口（模块 5，需登录）
 

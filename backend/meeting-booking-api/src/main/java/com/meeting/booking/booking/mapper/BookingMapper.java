@@ -88,4 +88,14 @@ public interface BookingMapper extends BaseMapper<Booking> {
      */
     @Select("SELECT COUNT(1) FROM booking WHERE organizer_id = #{organizerId}")
     int countByOrganizerId(@Param("organizerId") Long organizerId);
+
+    /**
+     * 统计某会议室未来有效预约数量（CONFIRMED 且结束时间晚于当前）。
+     *
+     * @param roomId 会议室 ID
+     * @return 未来预约条数
+     */
+    @Select("SELECT COUNT(1) FROM booking "
+            + "WHERE room_id = #{roomId} AND status = 'CONFIRMED' AND end_time > NOW()")
+    int countFutureBookingsByRoomId(@Param("roomId") Long roomId);
 }

@@ -61,6 +61,18 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
+  {
+    path: '/admin/rooms',
+    component: MainLayout,
+    children: [
+      {
+        path: '',
+        name: 'admin-rooms',
+        component: () => import('../views/admin/AdminRoomsView.vue'),
+        meta: { title: '会议室管理', requiresAdmin: true },
+      },
+    ],
+  },
 ]
 
 const router = createRouter({

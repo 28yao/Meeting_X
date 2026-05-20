@@ -33,6 +33,7 @@ function onLogout() {
         <router-link class="nav-link" to="/my-bookings">我的预约</router-link>
         <NotificationBadge />
         <router-link v-if="isAdmin" class="nav-link" to="/admin/users">用户管理</router-link>
+        <router-link v-if="isAdmin" class="nav-link" to="/admin/rooms">会议室管理</router-link>
       </nav>
       <div class="layout-actions">
         <span class="layout-user">你好，{{ displayName }}</span>
