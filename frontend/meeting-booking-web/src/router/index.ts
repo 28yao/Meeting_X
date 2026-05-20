@@ -37,6 +37,18 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
+  {
+    path: '/notifications',
+    component: MainLayout,
+    children: [
+      {
+        path: '',
+        name: 'notifications',
+        component: () => import('../views/NotificationsView.vue'),
+        meta: { title: '通知中心' },
+      },
+    ],
+  },
 ]
 
 const router = createRouter({

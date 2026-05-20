@@ -3,6 +3,7 @@ import { computed, reactive, ref } from 'vue'
 import { ElMessage } from 'element-plus'
 import { getAvailableRooms, type MeetingRoom } from '../api/room'
 import { createBooking } from '../api/booking'
+import { useNotificationStore } from '../stores/notification'
 import { resolveAxiosError } from '../utils/errorMessages'
 import AvailableRoomsStep from './book/AvailableRoomsStep.vue'
 import ConfirmStep from './book/ConfirmStep.vue'
@@ -20,6 +21,7 @@ const form = reactive({
 const rooms = ref<MeetingRoom[]>([])
 const selectedRoom = ref<MeetingRoom | null>(null)
 const title = ref('')
+const notificationStore = useNotificationStore()
 
 const timeOptions = computed(() => {
   const options: string[] = []
@@ -145,6 +147,7 @@ async function onSubmit() {
       return
     }
     ElMessage.success('预约成功！')
+    await notificationStore.refreshUnreadCount()
     activeStep.value = 0
     title.value = ''
     selectedRoom.value = null

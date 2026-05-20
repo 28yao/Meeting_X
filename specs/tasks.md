@@ -17,7 +17,7 @@
 | 2. 用户登录认证 | P0 | 已完成 |
 | 3. 会议室预约（员工） | P0 | 已完成 |
 | 4. 我的预约 | P0 | 已完成 |
-| 5. 站内通知 | P1 | 未开始 |
+| 5. 站内通知 | P1 | 已完成 |
 | 6. 管理员 — 用户管理 | P0 | 未开始 |
 | 7. 管理员 — 会议室管理 | P0 | 未开始 |
 | 8. 管理员 — 预约管理 | P0 | 未开始 |
@@ -421,30 +421,30 @@
 
 | ID | 任务 | 主文件 | 前置依赖 | 验收方式 | 状态 |
 |----|------|--------|----------|----------|------|
-| M5-F-01 | NotificationsView 列表 | `frontend/.../views/NotificationsView.vue` | M5-F-02 | 展示通知 |
-| M5-F-02 | notification API 四个接口封装 | `frontend/.../api/notification.ts` | M5-C-01 | 未读数、已读生效 | 未开始 |
-| M5-F-03 | 顶栏未读角标组件 | `frontend/.../components/NotificationBadge.vue` | M5-F-02 | 预约成功后角标+1 | 未开始 |
+| M5-F-01 | NotificationsView 列表 | `frontend/.../views/NotificationsView.vue` | M5-F-02 | 展示通知 | 已完成 |
+| M5-F-02 | notification API 四个接口封装 | `frontend/.../api/notification.ts` | M5-C-01 | 未读数、已读生效 | 已完成 |
+| M5-F-03 | 顶栏未读角标组件 | `frontend/.../components/NotificationBadge.vue` | M5-F-02 | 预约成功后角标+1 | 已完成 |
 
 ## 5. Controller 任务
 
 | ID | 任务 | 主文件 | 前置依赖 | 验收方式 | 状态 |
 |----|------|--------|----------|----------|------|
-| M5-C-01 | NotificationController 四个端点 | `backend/.../notification/NotificationController.java` | M5-S-02 | GET list/unread-count | 未开始 |
+| M5-C-01 | NotificationController 四个端点 | `backend/.../notification/NotificationController.java` | M5-S-02 | GET list/unread-count | 已完成 |
 
 ## 6. Service 任务
 
 | ID | 任务 | 主文件 | 前置依赖 | 验收方式 | 状态 |
 |----|------|--------|----------|----------|------|
-| M5-S-01 | Notification 实体与 Mapper | `backend/.../notification/entity/Notification.java` | M1-D-01 | 插入可读 | 未开始 |
-| M5-S-02 | NotificationQueryService 列表/未读/已读 | `backend/.../notification/NotificationService.java` | M5-S-01 | 标已读后不统计未读 | 未开始 |
-| M5-S-03 | NotificationPublisher 预约成功/取消 | `backend/.../notification/NotificationPublisher.java` | M3-S-03,M4-S-02 | 创建预约后 notification 有行 | 未开始 |
-| M5-S-04 | 管理员改约/取消时通知组织者 | `backend/.../notification/NotificationPublisher.java` | M8-S-02 | 管理员取消后组织者收到 | 未开始 |
+| M5-S-01 | Notification 实体与 Mapper | `backend/.../notification/entity/Notification.java` | M1-D-01 | 插入可读 | 已完成 |
+| M5-S-02 | NotificationQueryService 列表/未读/已读 | `backend/.../notification/NotificationService.java` | M5-S-01 | 标已读后不统计未读 | 已完成 |
+| M5-S-03 | NotificationPublisher 预约成功/取消 | `backend/.../notification/NotificationPublisher.java` | M3-S-03,M4-S-02 | 创建预约后 notification 有行 | 已完成 |
+| M5-S-04 | 管理员改约/取消时通知组织者 | `backend/.../notification/NotificationPublisher.java` | M8-S-02 | 管理员取消后组织者收到 | 已完成 |
 
 ## 7. Mapper 任务
 
 | ID | 任务 | 主文件 | 前置依赖 | 验收方式 | 状态 |
 |----|------|--------|----------|----------|------|
-| M5-M-01 | NotificationMapper CRUD | `backend/.../notification/mapper/NotificationMapper.java` | M1-D-01 | 参数化 userId | 未开始 |
+| M5-M-01 | NotificationMapper CRUD | `backend/.../notification/mapper/NotificationMapper.java` | M1-D-01 | 参数化 userId | 已完成 |
 
 ## 8. Repository / 数据保存任务
 
@@ -474,13 +474,14 @@ INSERT `notification`；UPDATE `read_flag`。
 
 ## 12. 当前状态
 
-**未开始。** 依赖模块 3、4（及管理员预约模块 8 的 M5-S-04）。
+**已完成。** `mvn test`（含 `NotificationIntegrationTest`）与 `npm run build` 已通过。M5-S-04 发布方法已就绪，待模块 8 管理员改约/取消时调用。
 
 | 项 | 说明 |
 |----|------|
 | 后端接口 | GET/POST 见 plan §8.4 |
 | 数据保存 | `notification` 表 |
 | 失败层级 | 业务未触发发布 / 查询 Service |
+| 前端路由 | `/notifications` + 顶栏未读角标 |
 
 ---
 

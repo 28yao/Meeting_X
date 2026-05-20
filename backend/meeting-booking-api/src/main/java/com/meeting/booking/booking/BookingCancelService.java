@@ -5,6 +5,9 @@ import com.meeting.booking.booking.entity.Booking;
 import com.meeting.booking.booking.mapper.BookingMapper;
 import com.meeting.booking.common.BusinessException;
 import com.meeting.booking.common.ErrorCodes;
+import com.meeting.booking.notification.NotificationPublisher;
+import com.meeting.booking.room.entity.MeetingRoom;
+import com.meeting.booking.room.mapper.MeetingRoomMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -23,9 +26,15 @@ public class BookingCancelService {
     private static final String STATUS_CANCELLED = "CANCELLED";
 
     private final BookingMapper bookingMapper;
+    private final MeetingRoomMapper meetingRoomMapper;
+    private final NotificationPublisher notificationPublisher;
 
-    public BookingCancelService(BookingMapper bookingMapper) {
+    public BookingCancelService(BookingMapper bookingMapper,
+                                MeetingRoomMapper meetingRoomMapper,
+                                NotificationPublisher notificationPublisher) {
         this.bookingMapper = bookingMapper;
+        this.meetingRoomMapper = meetingRoomMapper;
+        this.notificationPublisher = notificationPublisher;
     }
 
     /**
@@ -61,5 +70,19 @@ public class BookingCancelService {
             throw new BusinessException(ErrorCodes.BOOKING_CANNOT_CANCEL,
                     "取消失败，请刷新后重试", HttpStatus.FORBIDDEN.value());
         }
+
+        String roomName = resolveRoomName(booking.getRoomId());
+        notificationPublisher.publishBookingCancelledBySelf(
+                principal.getUserId(),
+                booking.getId(),
+                booking.getTitle(),
+                roomName,
+                booking.getStartTime(),
+                booking.getEndTime());
+    }
+
+    private String resolveRoomName(Long roomId) {
+        MeetingRoom room = meetingRoomMapper.selectById(roomId);
+        return room != null ? room.getName() : "会议室";
     }
 }

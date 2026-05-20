@@ -6,6 +6,7 @@ import {
   listMyBookings,
   type MyBookingItem,
 } from '../api/booking'
+import { useNotificationStore } from '../stores/notification'
 import { resolveAxiosError } from '../utils/errorMessages'
 import {
   formatDateTime,
@@ -20,6 +21,7 @@ const items = ref<MyBookingItem[]>([])
 const page = ref(1)
 const pageSize = ref(20)
 const total = ref(0)
+const notificationStore = useNotificationStore()
 
 async function loadList() {
   loading.value = true
@@ -58,6 +60,7 @@ async function onCancel(row: MyBookingItem) {
       return
     }
     ElMessage.success('预约已取消')
+    await notificationStore.refreshUnreadCount()
     await loadList()
   } catch (err) {
     ElMessage.error(resolveAxiosError(err))

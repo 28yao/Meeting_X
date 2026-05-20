@@ -7,6 +7,7 @@ import com.meeting.booking.booking.entity.Booking;
 import com.meeting.booking.booking.mapper.BookingMapper;
 import com.meeting.booking.common.BusinessException;
 import com.meeting.booking.common.ErrorCodes;
+import com.meeting.booking.notification.NotificationPublisher;
 import com.meeting.booking.room.entity.MeetingRoom;
 import com.meeting.booking.room.mapper.MeetingRoomMapper;
 import org.springframework.http.HttpStatus;
@@ -31,15 +32,18 @@ public class BookingService {
     private final MeetingRoomMapper meetingRoomMapper;
     private final TimeValidator timeValidator;
     private final BookingConflictChecker conflictChecker;
+    private final NotificationPublisher notificationPublisher;
 
     public BookingService(BookingMapper bookingMapper,
                           MeetingRoomMapper meetingRoomMapper,
                           TimeValidator timeValidator,
-                          BookingConflictChecker conflictChecker) {
+                          BookingConflictChecker conflictChecker,
+                          NotificationPublisher notificationPublisher) {
         this.bookingMapper = bookingMapper;
         this.meetingRoomMapper = meetingRoomMapper;
         this.timeValidator = timeValidator;
         this.conflictChecker = conflictChecker;
+        this.notificationPublisher = notificationPublisher;
     }
 
     /**
@@ -82,6 +86,14 @@ public class BookingService {
             throw new BusinessException(ErrorCodes.ROOM_SLOT_OCCUPIED,
                     "该时段已被他人抢先预约，请重新选择", HttpStatus.CONFLICT.value());
         }
+
+        notificationPublisher.publishBookingSuccess(
+                principal.getUserId(),
+                booking.getId(),
+                booking.getTitle(),
+                room.getName(),
+                booking.getStartTime(),
+                booking.getEndTime());
 
         CreateBookingResponse response = new CreateBookingResponse();
         response.setBookingId(booking.getId());

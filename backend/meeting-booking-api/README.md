@@ -77,6 +77,17 @@ GET http://localhost:8080/api/v1/health
 | 40303 | 预约已取消 |
 | 40402 | 预约不存在 |
 
+## 站内通知接口（模块 5，需登录）
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | `/notifications` | 当前用户通知列表 |
+| GET | `/notifications/unread-count` | 未读数量 |
+| POST | `/notifications/{id}/read` | 标单条已读 |
+| POST | `/notifications/read-all` | 全部标为已读 |
+
+预约成功、用户自行取消时会自动写入通知；管理员改约/取消通知在模块 8 接入后触发。
+
 ## 我的预约接口（模块 4，需登录）
 
 | 方法 | 路径 | 说明 |

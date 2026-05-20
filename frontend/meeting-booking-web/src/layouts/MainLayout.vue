@@ -1,13 +1,20 @@
 <script setup lang="ts">
-import { computed } from 'vue'
+import { computed, onMounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
+import { useNotificationStore } from '../stores/notification'
+import NotificationBadge from '../components/NotificationBadge.vue'
 
 const route = useRoute()
 const router = useRouter()
 const auth = useAuthStore()
+const notificationStore = useNotificationStore()
 
 const displayName = computed(() => auth.user?.displayName || auth.user?.username || '')
+
+onMounted(() => {
+  notificationStore.refreshUnreadCount()
+})
 
 function onLogout() {
   auth.logout()
@@ -23,6 +30,7 @@ function onLogout() {
       <nav class="layout-nav">
         <router-link class="nav-link" to="/book">预约会议室</router-link>
         <router-link class="nav-link" to="/my-bookings">我的预约</router-link>
+        <NotificationBadge />
       </nav>
       <div class="layout-actions">
         <span class="layout-user">你好，{{ displayName }}</span>
