@@ -1,10 +1,12 @@
 package com.meeting.booking.booking.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.meeting.booking.booking.dto.BookingMineRow;
 import com.meeting.booking.booking.entity.Booking;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.apache.ibatis.annotations.Update;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -51,4 +53,30 @@ public interface BookingMapper extends BaseMapper<Booking> {
     List<Booking> selectConfirmedByRoomAndDay(@Param("roomId") Long roomId,
                                               @Param("dayStart") LocalDateTime dayStart,
                                               @Param("dayEnd") LocalDateTime dayEnd);
+
+    /**
+     * 查询某组织者的全部预约（含会议室名称）。
+     *
+     * @param organizerId 组织者 ID
+     * @return 预约行列表
+     */
+    @Select("SELECT b.id, b.room_id AS roomId, b.organizer_id AS organizerId, b.title, "
+            + "b.start_time AS startTime, b.end_time AS endTime, b.status, "
+            + "r.name AS roomName "
+            + "FROM booking b "
+            + "INNER JOIN meeting_room r ON b.room_id = r.id "
+            + "WHERE b.organizer_id = #{organizerId}")
+    List<BookingMineRow> selectByOrganizerIdWithRoom(@Param("organizerId") Long organizerId);
+
+    /**
+     * 将预约状态更新为已取消（仅 CONFIRMED 且属于指定组织者）。
+     *
+     * @param bookingId   预约 ID
+     * @param organizerId 组织者 ID
+     * @return 影响行数
+     */
+    @Update("UPDATE booking SET status = 'CANCELLED', updated_at = NOW() "
+            + "WHERE id = #{bookingId} AND organizer_id = #{organizerId} AND status = 'CONFIRMED'")
+    int updateStatusToCancelled(@Param("bookingId") Long bookingId,
+                                @Param("organizerId") Long organizerId);
 }

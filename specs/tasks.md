@@ -16,7 +16,7 @@
 | 1. 项目脚手架与基础设施 | P0 | 已完成 |
 | 2. 用户登录认证 | P0 | 已完成 |
 | 3. 会议室预约（员工） | P0 | 已完成 |
-| 4. 我的预约 | P0 | 未开始 |
+| 4. 我的预约 | P0 | 已完成 |
 | 5. 站内通知 | P1 | 未开始 |
 | 6. 管理员 — 用户管理 | P0 | 未开始 |
 | 7. 管理员 — 会议室管理 | P0 | 未开始 |
@@ -335,30 +335,30 @@
 
 | ID | 任务 | 主文件 | 前置依赖 | 验收方式 | 状态 |
 |----|------|--------|----------|----------|------|
-| M4-F-01 | MyBookingsView 列表与分页 | `frontend/.../views/MyBookingsView.vue` | M4-F-02 | 展示至少一条预约 |
-| M4-F-02 | booking API：listMine、cancel | `frontend/.../api/booking.ts` | M4-C-01,M4-C-02 | 取消后刷新列表 | 未开始 |
-| M4-F-03 | 前端状态标签映射（未开始/进行中等） | `frontend/.../utils/bookingStatus.ts` | M4-F-01 | 时间与状态显示正确 | 未开始 |
+| M4-F-01 | MyBookingsView 列表与分页 | `frontend/.../views/MyBookingsView.vue` | M4-F-02 | 展示至少一条预约 | 已完成 |
+| M4-F-02 | booking API：listMine、cancel | `frontend/.../api/booking.ts` | M4-C-01,M4-C-02 | 取消后刷新列表 | 已完成 |
+| M4-F-03 | 前端状态标签映射（未开始/进行中等） | `frontend/.../utils/bookingStatus.ts` | M4-F-01 | 时间与状态显示正确 | 已完成 |
 
 ## 5. Controller 任务
 
 | ID | 任务 | 主文件 | 前置依赖 | 验收方式 | 状态 |
 |----|------|--------|----------|----------|------|
-| M4-C-01 | GET /api/v1/bookings/mine | `backend/.../booking/BookingController.java` | M4-S-01 | 分页 pageSize=20 | 未开始 |
-| M4-C-02 | POST /api/v1/bookings/{id}/cancel | `backend/.../booking/BookingController.java` | M4-S-02 | 仅组织者且未开始 | 未开始 |
+| M4-C-01 | GET /api/v1/bookings/mine | `backend/.../booking/BookingController.java` | M4-S-01 | 分页 pageSize=20 | 已完成 |
+| M4-C-02 | POST /api/v1/bookings/{id}/cancel | `backend/.../booking/BookingController.java` | M4-S-02 | 仅组织者且未开始 | 已完成 |
 
 ## 6. Service 任务
 
 | ID | 任务 | 主文件 | 前置依赖 | 验收方式 | 状态 |
 |----|------|--------|----------|----------|------|
-| M4-S-01 | listMine 排序与展示状态推导 | `backend/.../booking/BookingQueryService.java` | M3-M-02 | 单测排序逻辑 | 未开始 |
-| M4-S-02 | cancel 校验未开始 + 更新 CANCELLED | `backend/.../booking/BookingCancelService.java` | M3-R-01 | 已开始返回 40302 | 未开始 |
+| M4-S-01 | listMine 排序与展示状态推导 | `backend/.../booking/BookingQueryService.java` | M3-M-02 | 单测排序逻辑 | 已完成 |
+| M4-S-02 | cancel 校验未开始 + 更新 CANCELLED | `backend/.../booking/BookingCancelService.java` | M3-R-01 | 已开始返回 40302 | 已完成 |
 
 ## 7. Mapper 任务
 
 | ID | 任务 | 主文件 | 前置依赖 | 验收方式 | 状态 |
 |----|------|--------|----------|----------|------|
-| M4-M-01 | selectByOrganizerId 分页查询 | `backend/.../booking/mapper/BookingMapper.java` | M3-M-02 | 参数化 organizerId | 未开始 |
-| M4-M-02 | updateStatusToCancelled | `backend/.../booking/mapper/BookingMapper.java` | M4-M-01 | 取消后 status=CANCELLED | 未开始 |
+| M4-M-01 | selectByOrganizerId 分页查询 | `backend/.../booking/mapper/BookingMapper.java` | M3-M-02 | 参数化 organizerId | 已完成 |
+| M4-M-02 | updateStatusToCancelled | `backend/.../booking/mapper/BookingMapper.java` | M4-M-01 | 取消后 status=CANCELLED | 已完成 |
 
 ## 8. Repository / 数据保存任务
 
@@ -389,13 +389,14 @@
 
 ## 12. 当前状态
 
-**未开始。**
+**已完成。** `mvn test`（含 `BookingDisplayStatusTest`、`BookingMineIntegrationTest`）与 `npm run build` 已通过。
 
 | 项 | 说明 |
 |----|------|
 | 后端接口 | GET `/bookings/mine`；POST `/bookings/{id}/cancel` |
 | 数据保存 | `booking` 表 UPDATE status |
 | 失败层级 | 权限 / 状态校验 Service / Mapper |
+| 前端路由 | `/my-bookings` 列表与取消 |
 
 ---
 

@@ -16,6 +16,9 @@ public final class ErrorCodes {
     public static final int ROOM_SLOT_OCCUPIED = 40901;
     public static final int ROOM_UNDER_MAINTENANCE = 40902;
     public static final int ROOM_NOT_FOUND = 40401;
+    public static final int BOOKING_NOT_FOUND = 40402;
+    public static final int BOOKING_CANNOT_CANCEL = 40302;
+    public static final int BOOKING_ALREADY_CANCELLED = 40303;
 
     private ErrorCodes() {
     }

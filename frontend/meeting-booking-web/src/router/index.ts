@@ -25,6 +25,18 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
+  {
+    path: '/my-bookings',
+    component: MainLayout,
+    children: [
+      {
+        path: '',
+        name: 'my-bookings',
+        component: () => import('../views/MyBookingsView.vue'),
+        meta: { title: '我的预约' },
+      },
+    ],
+  },
 ]
 
 const router = createRouter({

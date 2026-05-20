@@ -22,6 +22,7 @@ function onLogout() {
       <span v-if="route.meta.title" class="layout-subtitle">{{ route.meta.title }}</span>
       <nav class="layout-nav">
         <router-link class="nav-link" to="/book">预约会议室</router-link>
+        <router-link class="nav-link" to="/my-bookings">我的预约</router-link>
       </nav>
       <div class="layout-actions">
         <span class="layout-user">你好，{{ displayName }}</span>
