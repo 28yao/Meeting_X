@@ -3,7 +3,6 @@ package com.meeting.booking.user;
 import com.meeting.booking.common.ApiResponse;
 import com.meeting.booking.user.dto.AdminUserDto;
 import com.meeting.booking.user.dto.CreateAdminUserRequest;
-import com.meeting.booking.user.dto.ResetPasswordRequest;
 import com.meeting.booking.user.dto.UpdateAdminUserRequest;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -70,17 +69,14 @@ public class AdminUserController {
     }
 
     /**
-     * 重置用户密码。
+     * 将用户密码重置为系统默认密码（123456）。
      *
-     * @param id      用户 ID
-     * @param request 新密码
+     * @param id 用户 ID
      * @return 空成功响应
      */
     @PostMapping("/{id}/reset-password")
-    public ApiResponse<Void> resetPassword(
-            @PathVariable("id") Long id,
-            @Valid @RequestBody ResetPasswordRequest request) {
-        adminUserService.resetPassword(id, request);
+    public ApiResponse<Void> resetPassword(@PathVariable("id") Long id) {
+        adminUserService.resetPassword(id);
         return ApiResponse.success(null);
     }
 }

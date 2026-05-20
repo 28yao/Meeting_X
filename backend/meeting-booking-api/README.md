@@ -84,9 +84,9 @@ GET http://localhost:8080/api/v1/health
 | 方法 | 路径 | 说明 |
 |------|------|------|
 | GET | `/admin/users` | 用户列表 |
-| POST | `/admin/users` | 创建用户 |
+| POST | `/admin/users` | 创建用户。Body：`{username,role,enabled?}`；密码默认 `123456`，显示名默认等于账号 |
 | PUT | `/admin/users/{id}` | 编辑用户（显示名、角色、启用状态） |
-| POST | `/admin/users/{id}/reset-password` | 重置密码，body: `{password}` |
+| POST | `/admin/users/{id}/reset-password` | 重置为默认密码 `123456`（无需 body） |
 
 ## 站内通知接口（模块 5，需登录）
 
@@ -112,7 +112,7 @@ GET http://localhost:8080/api/v1/health
 |------|------|------|
 | admin | admin123 | ADMIN |
 
-另含示例会议室「一号会议室」。
+管理员新建的用户默认密码为 **123456**（重置密码亦恢复为该默认值）。另含示例会议室「一号会议室」。
 
 ## 常用命令
 

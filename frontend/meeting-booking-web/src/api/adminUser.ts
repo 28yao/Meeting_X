@@ -11,8 +11,6 @@ export interface AdminUser {
 
 export interface CreateAdminUserRequest {
   username: string
-  password: string
-  displayName: string
   role: 'EMPLOYEE' | 'ADMIN'
   enabled?: boolean
 }
@@ -21,10 +19,6 @@ export interface UpdateAdminUserRequest {
   displayName?: string
   role?: 'EMPLOYEE' | 'ADMIN'
   enabled?: boolean
-}
-
-export interface ResetPasswordRequest {
-  password: string
 }
 
 export async function listAdminUsers(): Promise<ApiResponse<AdminUser[]>> {
@@ -47,10 +41,7 @@ export async function updateAdminUser(
   return res.data
 }
 
-export async function resetAdminUserPassword(
-  id: number,
-  data: ResetPasswordRequest,
-): Promise<ApiResponse<null>> {
-  const res = await http.post<ApiResponse<null>>(`/admin/users/${id}/reset-password`, data)
+export async function resetAdminUserPassword(id: number): Promise<ApiResponse<null>> {
+  const res = await http.post<ApiResponse<null>>(`/admin/users/${id}/reset-password`)
   return res.data
 }

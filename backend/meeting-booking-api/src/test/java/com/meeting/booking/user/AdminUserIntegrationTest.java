@@ -43,8 +43,7 @@ class AdminUserIntegrationTest {
     void adminCanCreateAndUpdateUser() throws Exception {
         String username = "emp_" + System.currentTimeMillis();
         String createBody = String.format(
-                "{\"username\":\"%s\",\"password\":\"emp12345\",\"displayName\":\"测试员工\","
-                        + "\"role\":\"EMPLOYEE\",\"enabled\":true}",
+                "{\"username\":\"%s\",\"role\":\"EMPLOYEE\",\"enabled\":true}",
                 username);
 
         MvcResult createResult = mockMvc.perform(post("/admin/users")
@@ -53,6 +52,7 @@ class AdminUserIntegrationTest {
                         .content(createBody))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.username").value(username))
+                .andExpect(jsonPath("$.data.displayName").value(username))
                 .andReturn();
 
         JsonNode created = objectMapper.readTree(createResult.getResponse().getContentAsString());
@@ -65,7 +65,7 @@ class AdminUserIntegrationTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.data.displayName").value("测试员工-已改"));
 
-        String employeeToken = loginAs(username, "emp12345");
+        String employeeToken = loginAs(username, AdminUserDefaults.DEFAULT_PASSWORD);
         assertNotNull(employeeToken);
 
         mockMvc.perform(post("/admin/users")
@@ -76,9 +76,30 @@ class AdminUserIntegrationTest {
     }
 
     @Test
+    void resetPasswordRestoresDefault() throws Exception {
+        String username = "reset_" + System.currentTimeMillis();
+        String createBody = String.format(
+                "{\"username\":\"%s\",\"role\":\"EMPLOYEE\",\"enabled\":true}",
+                username);
+        MvcResult createResult = mockMvc.perform(post("/admin/users")
+                        .header("Authorization", "Bearer " + adminToken)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(createBody))
+                .andExpect(status().isOk())
+                .andReturn();
+        long userId = objectMapper.readTree(createResult.getResponse().getContentAsString())
+                .get("data").get("id").asLong();
+
+        mockMvc.perform(post("/admin/users/" + userId + "/reset-password")
+                        .header("Authorization", "Bearer " + adminToken))
+                .andExpect(status().isOk());
+
+        assertNotNull(loginAs(username, AdminUserDefaults.DEFAULT_PASSWORD));
+    }
+
+    @Test
     void duplicateUsernameFails() throws Exception {
-        String body = "{\"username\":\"admin\",\"password\":\"x123456\","
-                + "\"displayName\":\"重复\",\"role\":\"EMPLOYEE\"}";
+        String body = "{\"username\":\"admin\",\"role\":\"EMPLOYEE\"}";
         mockMvc.perform(post("/admin/users")
                         .header("Authorization", "Bearer " + adminToken)
                         .contentType(MediaType.APPLICATION_JSON)

@@ -73,23 +73,17 @@ async function onFormSubmit(payload: CreateAdminUserRequest | UpdateAdminUserReq
 
 async function onResetPassword(row: AdminUser) {
   try {
-    const { value } = await ElMessageBox.prompt('请输入新密码（至少 6 位）', '重置密码', {
-      confirmButtonText: '确定',
-      cancelButtonText: '取消',
-      inputType: 'password',
-      inputValidator: (val) => {
-        if (!val || val.length < 6) {
-          return '密码至少 6 位'
-        }
-        return true
-      },
-    })
-    const res = await resetAdminUserPassword(row.id, { password: value })
+    await ElMessageBox.confirm(
+      `确定将用户「${row.username}」的密码重置为默认密码 123456 吗？`,
+      '重置密码',
+      { type: 'warning', confirmButtonText: '确定', cancelButtonText: '取消' },
+    )
+    const res = await resetAdminUserPassword(row.id)
     if (res.code !== 0) {
       ElMessage.error(res.message || '重置失败')
       return
     }
-    ElMessage.success('密码已重置')
+    ElMessage.success('密码已重置为 123456')
   } catch (err) {
     if (err !== 'cancel') {
       ElMessage.error(resolveAxiosError(err))

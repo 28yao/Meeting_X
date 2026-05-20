@@ -15,11 +15,9 @@ public class CreateAdminUserRequest {
     @Size(max = 64, message = "登录账号过长")
     private String username;
 
-    @NotBlank(message = "密码不能为空")
     @Size(min = 6, max = 64, message = "密码长度须在 6～64 位")
     private String password;
 
-    @NotBlank(message = "显示名称不能为空")
     @Size(max = 128, message = "显示名称过长")
     private String displayName;
 

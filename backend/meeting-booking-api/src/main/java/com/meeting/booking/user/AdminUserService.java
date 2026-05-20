@@ -5,7 +5,6 @@ import com.meeting.booking.common.BusinessException;
 import com.meeting.booking.common.ErrorCodes;
 import com.meeting.booking.user.dto.AdminUserDto;
 import com.meeting.booking.user.dto.CreateAdminUserRequest;
-import com.meeting.booking.user.dto.ResetPasswordRequest;
 import com.meeting.booking.user.dto.UpdateAdminUserRequest;
 import com.meeting.booking.user.entity.SysUser;
 import com.meeting.booking.user.mapper.SysUserMapper;
@@ -73,8 +72,8 @@ public class AdminUserService {
         }
         SysUser user = new SysUser();
         user.setUsername(username);
-        user.setPasswordHash(passwordEncoder.encode(trim(request.getPassword())));
-        user.setDisplayName(trim(request.getDisplayName()));
+        user.setPasswordHash(passwordEncoder.encode(resolvePassword(request.getPassword())));
+        user.setDisplayName(resolveDisplayName(username, request.getDisplayName()));
         user.setRole(request.getRole().trim());
         user.setEnabled(resolveEnabled(request.getEnabled()));
         sysUserMapper.insert(user);
@@ -106,16 +105,31 @@ public class AdminUserService {
     }
 
     /**
-     * 重置用户密码。
+     * 将用户密码重置为系统默认密码。
      *
-     * @param userId  用户 ID
-     * @param request 新密码请求
+     * @param userId 用户 ID
      */
     @Transactional(rollbackFor = Exception.class)
-    public void resetPassword(Long userId, ResetPasswordRequest request) {
+    public void resetPassword(Long userId) {
         SysUser user = requireUser(userId);
-        user.setPasswordHash(passwordEncoder.encode(trim(request.getPassword())));
+        user.setPasswordHash(passwordEncoder.encode(AdminUserDefaults.DEFAULT_PASSWORD));
         sysUserMapper.updateById(user);
+    }
+
+    private String resolvePassword(String password) {
+        String trimmed = trim(password);
+        if (trimmed == null || trimmed.isEmpty()) {
+            return AdminUserDefaults.DEFAULT_PASSWORD;
+        }
+        return trimmed;
+    }
+
+    private String resolveDisplayName(String username, String displayName) {
+        String trimmed = trim(displayName);
+        if (trimmed == null || trimmed.isEmpty()) {
+            return username;
+        }
+        return trimmed;
     }
 
     private SysUser requireUser(Long userId) {
