@@ -43,4 +43,18 @@ public class BookingConflictChecker {
     public int countOverlap(Long roomId, LocalDateTime startTime, LocalDateTime endTime) {
         return bookingMapper.countOverlap(roomId, startTime, endTime);
     }
+
+    /**
+     * 判断时段内是否存在与指定预约之外的重叠预约。
+     *
+     * @param excludeBookingId 排除的预约 ID
+     * @param roomId           会议室 ID
+     * @param startTime        开始时间
+     * @param endTime          结束时间
+     * @return 存在重叠返回 true
+     */
+    public boolean hasOverlapExcluding(Long excludeBookingId, Long roomId,
+                                       LocalDateTime startTime, LocalDateTime endTime) {
+        return bookingMapper.countOverlapExcluding(excludeBookingId, roomId, startTime, endTime) > 0;
+    }
 }

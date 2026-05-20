@@ -73,6 +73,18 @@ const routes: RouteRecordRaw[] = [
       },
     ],
   },
+  {
+    path: '/admin/bookings',
+    component: MainLayout,
+    children: [
+      {
+        path: '',
+        name: 'admin-bookings',
+        component: () => import('../views/admin/AdminBookingsView.vue'),
+        meta: { title: '预约管理', requiresAdmin: true },
+      },
+    ],
+  },
 ]
 
 const router = createRouter({

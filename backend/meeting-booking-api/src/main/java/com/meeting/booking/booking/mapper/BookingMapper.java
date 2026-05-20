@@ -1,6 +1,7 @@
 package com.meeting.booking.booking.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.meeting.booking.booking.dto.AdminBookingRow;
 import com.meeting.booking.booking.dto.BookingMineRow;
 import com.meeting.booking.booking.entity.Booking;
 import org.apache.ibatis.annotations.Mapper;
@@ -34,6 +35,38 @@ public interface BookingMapper extends BaseMapper<Booking> {
     int countOverlap(@Param("roomId") Long roomId,
                      @Param("startTime") LocalDateTime startTime,
                      @Param("endTime") LocalDateTime endTime);
+
+    /**
+     * 统计时段内重叠预约数量（排除指定预约 ID，用于管理员改约）。
+     *
+     * @param excludeBookingId 排除的预约 ID
+     * @param roomId           会议室 ID
+     * @param startTime        开始时间
+     * @param endTime          结束时间
+     * @return 重叠条数
+     */
+    @Select("SELECT COUNT(1) FROM booking "
+            + "WHERE room_id = #{roomId} AND status = 'CONFIRMED' AND id <> #{excludeBookingId} "
+            + "AND start_time < #{endTime} AND end_time > #{startTime}")
+    int countOverlapExcluding(@Param("excludeBookingId") Long excludeBookingId,
+                              @Param("roomId") Long roomId,
+                              @Param("startTime") LocalDateTime startTime,
+                              @Param("endTime") LocalDateTime endTime);
+
+    /**
+     * 查询全公司预约（含会议室名与组织者显示名）。
+     *
+     * @return 预约行列表
+     */
+    @Select("SELECT b.id, b.room_id AS roomId, b.organizer_id AS organizerId, b.title, "
+            + "b.start_time AS startTime, b.end_time AS endTime, b.status, "
+            + "r.name AS roomName, u.display_name AS organizerDisplayName "
+            + "FROM booking b "
+            + "INNER JOIN meeting_room r ON b.room_id = r.id "
+            + "INNER JOIN sys_user u ON b.organizer_id = u.id "
+            + "WHERE r.deleted = 0 "
+            + "ORDER BY b.start_time DESC")
+    List<AdminBookingRow> selectAllWithRoomAndOrganizer();
 
     /**
      * 查询某会议室某日有效预约（用于占用片段展示）。
@@ -79,6 +112,32 @@ public interface BookingMapper extends BaseMapper<Booking> {
             + "WHERE id = #{bookingId} AND organizer_id = #{organizerId} AND status = 'CONFIRMED'")
     int updateStatusToCancelled(@Param("bookingId") Long bookingId,
                                 @Param("organizerId") Long organizerId);
+
+    /**
+     * 管理员将预约标为已取消（仅 CONFIRMED）。
+     *
+     * @param bookingId 预约 ID
+     * @return 影响行数
+     */
+    @Update("UPDATE booking SET status = 'CANCELLED', updated_at = NOW() "
+            + "WHERE id = #{bookingId} AND status = 'CONFIRMED'")
+    int updateStatusToCancelledByAdmin(@Param("bookingId") Long bookingId);
+
+    /**
+     * 管理员更新预约的会议室与时段（仅 CONFIRMED）。
+     *
+     * @param bookingId 预约 ID
+     * @param roomId    会议室 ID
+     * @param startTime 开始时间
+     * @param endTime   结束时间
+     * @return 影响行数
+     */
+    @Update("UPDATE booking SET room_id = #{roomId}, start_time = #{startTime}, end_time = #{endTime}, "
+            + "updated_at = NOW() WHERE id = #{bookingId} AND status = 'CONFIRMED'")
+    int updateTimeAndRoom(@Param("bookingId") Long bookingId,
+                          @Param("roomId") Long roomId,
+                          @Param("startTime") LocalDateTime startTime,
+                          @Param("endTime") LocalDateTime endTime);
 
     /**
      * 统计某用户作为组织者的预约条数（含已取消）。

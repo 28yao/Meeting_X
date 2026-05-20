@@ -111,7 +111,15 @@ GET http://localhost:8080/api/v1/health
 | POST | `/notifications/{id}/read` | 标单条已读 |
 | POST | `/notifications/read-all` | 全部标为已读 |
 
-预约成功、用户自行取消时会自动写入通知；管理员改约/取消通知在模块 8 接入后触发。
+预约成功、用户自行取消时会自动写入通知；管理员改约/取消亦会通知原组织者。
+
+## 管理员预约接口（模块 8，需 ADMIN 角色）
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| GET | `/admin/bookings` | 全公司预约列表。Query：`page`（默认 1，每页 20 条） |
+| PUT | `/admin/bookings/{id}` | 修改会议室与时段。Body：`{roomId,startTime,endTime}` |
+| POST | `/admin/bookings/{id}/cancel` | 取消未开始的预约 |
 
 ## 我的预约接口（模块 4，需登录）
 
