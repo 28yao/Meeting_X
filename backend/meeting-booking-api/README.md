@@ -47,6 +47,13 @@ GET http://localhost:8080/api/v1/health
 | DB_USERNAME | root | 用户名 |
 | DB_PASSWORD | 123 | 密码 |
 
+## 认证接口（模块 2）
+
+| 方法 | 路径 | 说明 |
+|------|------|------|
+| POST | `/auth/login` | 登录，body: `{username,password}` |
+| GET | `/auth/me` | 当前用户（Header: `Authorization: Bearer <token>`） |
+
 ## 种子数据
 
 | 账号 | 密码 | 角色 |

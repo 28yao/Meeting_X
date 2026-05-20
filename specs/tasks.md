@@ -14,7 +14,7 @@
 | 模块 | 优先级 | 当前状态 |
 |------|--------|----------|
 | 1. 项目脚手架与基础设施 | P0 | 已完成 |
-| 2. 用户登录认证 | P0 | 未开始 |
+| 2. 用户登录认证 | P0 | 已完成 |
 | 3. 会议室预约（员工） | P0 | 未开始 |
 | 4. 我的预约 | P0 | 未开始 |
 | 5. 站内通知 | P1 | 未开始 |
@@ -139,35 +139,35 @@
 
 | ID | 任务 | 主文件 | 前置依赖 | 验收方式 | 状态 |
 |----|------|--------|----------|----------|------|
-| M2-F-01 | 登录页 UI 与表单校验 | `frontend/.../views/LoginView.vue` | M1-F-02, M1-F-03 | 空账号提交有前端提示 | 未开始 |
-| M2-F-02 | auth API：login、getMe | `frontend/.../api/auth.ts` | M2-F-01 | 能调通 POST login | 未开始 |
-| M2-F-03 | Pinia/存储 Token 与用户信息 | `frontend/.../stores/auth.ts` | M2-F-02 | 登录后刷新仍保持（若用 localStorage） | 未开始 |
-| M2-F-04 | 路由守卫：未登录跳转 login | `frontend/.../router/guards.ts` | M2-F-03 | 未登录访问 /book 跳转登录 | 未开始 |
-| M2-F-05 | Axios 请求拦截器附加 Bearer Token | `frontend/.../api/http.ts` | M2-F-03 | 受保护接口带 Authorization | 未开始 |
-| M2-F-06 | 布局：显示用户名与退出 | `frontend/.../layouts/MainLayout.vue` | M2-F-03 | 点击退出回到登录页 | 未开始 |
+| M2-F-01 | 登录页 UI 与表单校验 | `frontend/meeting-booking-web/src/views/LoginView.vue` | M1-F-02, M1-F-03 | 空账号提交有前端提示 | 已完成 |
+| M2-F-02 | auth API：login、getMe | `frontend/meeting-booking-web/src/api/auth.ts` | M2-F-01 | 能调通 POST login | 已完成 |
+| M2-F-03 | Pinia/存储 Token 与用户信息 | `frontend/meeting-booking-web/src/stores/auth.ts` | M2-F-02 | 登录后刷新仍保持（若用 localStorage） | 已完成 |
+| M2-F-04 | 路由守卫：未登录跳转 login | `frontend/meeting-booking-web/src/router/guards.ts` | M2-F-03 | 未登录访问 /book 跳转登录 | 已完成 |
+| M2-F-05 | Axios 请求拦截器附加 Bearer Token | `frontend/meeting-booking-web/src/api/http.ts` | M2-F-03 | 受保护接口带 Authorization | 已完成 |
+| M2-F-06 | 布局：显示用户名与退出 | `frontend/meeting-booking-web/src/layouts/MainLayout.vue` | M2-F-03 | 点击退出回到登录页 | 已完成 |
 
 ## 5. Controller 任务
 
 | ID | 任务 | 主文件 | 前置依赖 | 验收方式 | 状态 |
 |----|------|--------|----------|----------|------|
-| M2-C-01 | POST /api/v1/auth/login | `backend/.../auth/AuthController.java` | M2-S-02 | 正确账号返回 token | 未开始 |
-| M2-C-02 | GET /api/v1/auth/me | `backend/.../auth/AuthController.java` | M2-S-03, M2-S-04 | 带 token 返回用户信息 | 未开始 |
+| M2-C-01 | POST /api/v1/auth/login | `backend/meeting-booking-api/src/main/java/com/meeting/booking/auth/AuthController.java` | M2-S-02 | 正确账号返回 token | 已完成 |
+| M2-C-02 | GET /api/v1/auth/me | `backend/meeting-booking-api/src/main/java/com/meeting/booking/auth/AuthController.java` | M2-S-03, M2-S-04 | 带 token 返回用户信息 | 已完成 |
 
 ## 6. Service 任务
 
 | ID | 任务 | 主文件 | 前置依赖 | 验收方式 | 状态 |
 |----|------|--------|----------|----------|------|
-| M2-S-01 | User 实体与 SysUserMapper | `backend/.../user/entity/SysUser.java` | M1-D-01 | 能按 username 查询 | 未开始 |
-| M2-S-02 | AuthService：校验密码、签发 JWT | `backend/.../auth/AuthService.java` | M2-S-01, M2-S-05 | 错密抛认证失败 | 未开始 |
-| M2-S-03 | JwtTokenProvider 生成与解析 | `backend/.../auth/JwtTokenProvider.java` | M1-B-02 | 单测 token 往返 | 未开始 |
-| M2-S-04 | SecurityConfig：放行 login，其余需认证 | `backend/.../config/SecurityConfig.java` | M2-S-03 | 无 token 访问 /bookings 返回 401 | 未开始 |
-| M2-S-05 | BCrypt 密码编码器 Bean | `backend/.../config/PasswordEncoderConfig.java` | M1-B-01 | 种子 admin 密码可验证 | 未开始 |
+| M2-S-01 | User 实体与 SysUserMapper | `backend/meeting-booking-api/src/main/java/com/meeting/booking/user/entity/SysUser.java` | M1-D-01 | 能按 username 查询 | 已完成 |
+| M2-S-02 | AuthService：校验密码、签发 JWT | `backend/meeting-booking-api/src/main/java/com/meeting/booking/auth/AuthService.java` | M2-S-01, M2-S-05 | 错密抛认证失败 | 已完成 |
+| M2-S-03 | JwtTokenProvider 生成与解析 | `backend/meeting-booking-api/src/main/java/com/meeting/booking/auth/JwtTokenProvider.java` | M1-B-02 | 单测 token 往返 | 已完成 |
+| M2-S-04 | SecurityConfig：放行 login，其余需认证 | `backend/meeting-booking-api/src/main/java/com/meeting/booking/config/SecurityConfig.java` | M2-S-03 | 无 token 访问 /bookings 返回 401 | 已完成 |
+| M2-S-05 | BCrypt 密码编码器 Bean | `backend/meeting-booking-api/src/main/java/com/meeting/booking/config/PasswordEncoderConfig.java` | M1-B-01 | 种子 admin 密码可验证 | 已完成 |
 
 ## 7. Mapper 任务
 
 | ID | 任务 | 主文件 | 前置依赖 | 验收方式 | 状态 |
 |----|------|--------|----------|----------|------|
-| M2-M-01 | SysUserMapper 接口与 XML/注解 | `backend/.../user/mapper/SysUserMapper.java` | M1-D-01 | selectByUsername 有结果 | 未开始 |
+| M2-M-01 | SysUserMapper 接口与 XML/注解 | `backend/meeting-booking-api/src/main/java/com/meeting/booking/user/mapper/SysUserMapper.java` | M1-D-01 | selectByUsername 有结果 | 已完成 |
 
 ## 8. Repository / 数据保存任务
 
@@ -199,7 +199,7 @@
 
 ## 12. 当前状态
 
-**未开始。**
+**已完成。**
 
 | 项 | 说明 |
 |----|------|

@@ -25,6 +25,11 @@ mybatis-plus:
       logic-delete-value: 1
       logic-not-delete-value: 0
 
+app:
+  jwt:
+    secret: meeting-booking-jwt-secret-key-for-dev-only-32b
+    expiration-ms: 86400000
+
 logging:
   level:
     com.meeting.booking: INFO
