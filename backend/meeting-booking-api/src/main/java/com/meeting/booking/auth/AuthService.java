@@ -2,8 +2,10 @@ package com.meeting.booking.auth;
 
 import com.meeting.booking.auth.dto.LoginRequest;
 import com.meeting.booking.auth.dto.LoginResponse;
+import com.meeting.booking.auth.dto.RegisterRequest;
 import com.meeting.booking.auth.dto.UserInfoResponse;
 import com.meeting.booking.common.BusinessException;
+import com.meeting.booking.common.ErrorCodes;
 import com.meeting.booking.user.entity.SysUser;
 import com.meeting.booking.user.mapper.SysUserMapper;
 import org.springframework.http.HttpStatus;
@@ -51,6 +53,36 @@ public class AuthService {
         if (user.getEnabled() == null || user.getEnabled() != 1) {
             throw new BusinessException(CODE_ACCOUNT_DISABLED, "账号已禁用，请联系管理员", HttpStatus.UNAUTHORIZED.value());
         }
+        LoginResponse response = new LoginResponse();
+        response.setToken(jwtTokenProvider.createToken(user));
+        response.setUser(toUserInfo(user));
+        return response;
+    }
+
+    /**
+     * 用户自助注册，创建 EMPLOYEE 账号并返回 JWT。
+     *
+     * @param request 注册请求
+     * @return 登录响应（含 token）
+     */
+    public LoginResponse register(RegisterRequest request) {
+        if (request.getPassword() == null || !request.getPassword().equals(request.getConfirmPassword())) {
+            throw new BusinessException(ErrorCodes.PASSWORD_MISMATCH, "密码与确认密码不一致",
+                    HttpStatus.BAD_REQUEST.value());
+        }
+        String username = request.getUsername().trim();
+        if (sysUserMapper.selectByUsername(username) != null) {
+            throw new BusinessException(ErrorCodes.USERNAME_ALREADY_EXISTS, "账号已存在",
+                    HttpStatus.CONFLICT.value());
+        }
+        SysUser user = new SysUser();
+        user.setUsername(username);
+        user.setPasswordHash(passwordEncoder.encode(request.getPassword()));
+        String displayName = request.getDisplayName();
+        user.setDisplayName(displayName != null && !displayName.trim().isEmpty() ? displayName.trim() : username);
+        user.setRole("EMPLOYEE");
+        user.setEnabled(1);
+        sysUserMapper.insert(user);
         LoginResponse response = new LoginResponse();
         response.setToken(jwtTokenProvider.createToken(user));
         response.setUser(toUserInfo(user));

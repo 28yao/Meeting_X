@@ -14,6 +14,12 @@ const routes: RouteRecordRaw[] = [
     meta: { public: true },
   },
   {
+    path: '/register',
+    name: 'register',
+    component: () => import('../views/RegisterView.vue'),
+    meta: { public: true },
+  },
+  {
     path: '/book',
     component: MainLayout,
     children: [

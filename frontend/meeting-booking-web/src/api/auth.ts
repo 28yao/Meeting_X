@@ -6,8 +6,20 @@ export interface LoginRequest {
   password: string
 }
 
+export interface RegisterRequest {
+  username: string
+  password: string
+  confirmPassword: string
+  displayName?: string
+}
+
 export async function login(data: LoginRequest): Promise<ApiResponse<LoginResult>> {
   const res = await http.post<ApiResponse<LoginResult>>('/auth/login', data)
+  return res.data
+}
+
+export async function register(data: RegisterRequest): Promise<ApiResponse<LoginResult>> {
+  const res = await http.post<ApiResponse<LoginResult>>('/auth/register', data)
   return res.data
 }
 

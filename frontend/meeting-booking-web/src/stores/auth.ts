@@ -86,5 +86,6 @@ export const useAuthStore = defineStore('auth', () => {
     fetchMe,
     restoreSession,
     logout,
+    persistSession,
   }
 })

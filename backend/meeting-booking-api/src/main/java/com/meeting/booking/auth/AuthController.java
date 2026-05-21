@@ -2,6 +2,7 @@ package com.meeting.booking.auth;
 
 import com.meeting.booking.auth.dto.LoginRequest;
 import com.meeting.booking.auth.dto.LoginResponse;
+import com.meeting.booking.auth.dto.RegisterRequest;
 import com.meeting.booking.auth.dto.UserInfoResponse;
 import com.meeting.booking.common.ApiResponse;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -38,6 +39,17 @@ public class AuthController {
     @PostMapping("/login")
     public ApiResponse<LoginResponse> login(@Valid @RequestBody LoginRequest request) {
         return ApiResponse.success(authService.login(request));
+    }
+
+    /**
+     * 用户自助注册，创建 EMPLOYEE 账号并返回 JWT。
+     *
+     * @param request 注册请求体
+     * @return 含 token 与用户信息
+     */
+    @PostMapping("/register")
+    public ApiResponse<LoginResponse> register(@Valid @RequestBody RegisterRequest request) {
+        return ApiResponse.success(authService.register(request));
     }
 
     /**

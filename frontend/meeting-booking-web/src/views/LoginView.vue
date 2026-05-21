@@ -79,8 +79,10 @@ async function onSubmit() {
             登录
           </el-button>
         </el-form-item>
+        <div class="register-link">
+          还没有账号？<router-link to="/register">注册账号</router-link>
+        </div>
       </el-form>
-      <p class="login-hint">测试账号：admin / admin123</p>
     </el-card>
   </div>
 </template>
@@ -108,10 +110,19 @@ async function onSubmit() {
   margin-bottom: 16px;
 }
 
-.login-hint {
-  margin: 0;
-  font-size: 12px;
+.register-link {
+  margin-top: 12px;
+  font-size: 13px;
   color: #909399;
   text-align: center;
+}
+
+.register-link a {
+  color: #409eff;
+  text-decoration: none;
+}
+
+.register-link a:hover {
+  text-decoration: underline;
 }
 </style>
