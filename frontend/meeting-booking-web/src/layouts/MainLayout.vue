@@ -50,64 +50,88 @@ function onLogout() {
 <style scoped>
 .layout-root {
   min-height: 100vh;
+  background: var(--app-bg);
 }
 
 .layout-header {
   display: flex;
   align-items: center;
-  gap: 16px;
-  background: #409eff;
-  color: #fff;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  padding: 0 24px;
+  height: auto;
+  min-height: 56px;
+  background: var(--app-primary-dark);
+  color: #faf9f7;
+  box-shadow: var(--app-shadow-sm);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
 }
 
 .layout-title {
-  font-size: 18px;
+  font-size: 17px;
   font-weight: 600;
+  letter-spacing: 0.02em;
 }
 
 .layout-subtitle {
-  font-size: 14px;
-  opacity: 0.9;
+  font-size: 13px;
+  color: rgba(250, 249, 247, 0.75);
+  padding-left: 12px;
+  border-left: 1px solid rgba(250, 249, 247, 0.25);
 }
 
 .layout-nav {
   display: flex;
-  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 4px 8px;
 }
 
 .nav-link {
-  color: #fff;
+  color: rgba(250, 249, 247, 0.88);
   text-decoration: none;
   font-size: 14px;
+  padding: 6px 10px;
+  border-radius: var(--app-radius-sm);
+  transition: background-color 0.2s ease, color 0.2s ease;
+  cursor: pointer;
+}
+
+.nav-link:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
 }
 
 .nav-link.router-link-active {
   font-weight: 600;
-  text-decoration: underline;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.14);
+  text-decoration: none;
 }
 
 .layout-actions {
   margin-left: auto;
   display: flex;
   align-items: center;
-  gap: 8px;
+  gap: 12px;
 }
 
 .layout-user {
   font-size: 14px;
+  color: rgba(250, 249, 247, 0.9);
 }
 
 .logout-btn {
-  color: #fff !important;
+  color: rgba(250, 249, 247, 0.95) !important;
   font-weight: 500;
 }
 
 .logout-btn:hover {
-  color: #e6f4ff !important;
+  color: var(--app-accent) !important;
 }
 
 .layout-main {
-  padding: 24px;
-  background: #f5f7fa;
+  padding: 28px 24px 40px;
+  background: var(--app-bg);
 }
 </style>

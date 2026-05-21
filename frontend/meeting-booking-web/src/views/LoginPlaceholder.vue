@@ -41,22 +41,25 @@ onMounted(async () => {
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, #e8f4ff 0%, #f5f7fa 100%);
+  padding: 24px;
+  background: var(--app-bg);
 }
 
 .login-card {
   width: 420px;
   max-width: 92vw;
+  border: 1px solid var(--app-border-light);
 }
 
 .hint {
   margin: 0 0 16px;
-  color: #606266;
+  color: var(--app-text-secondary);
+  line-height: 1.6;
 }
 
 .footer-hint {
   margin: 16px 0 0;
   font-size: 12px;
-  color: #909399;
+  color: var(--app-text-muted);
 }
 </style>

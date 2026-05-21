@@ -142,20 +142,9 @@ onMounted(() => {
   margin: 0 auto;
 }
 
-.page-title {
-  margin: 0 0 16px;
-  font-size: 20px;
-  font-weight: 600;
-  color: #303133;
-}
-
 .pager {
   margin-top: 16px;
   display: flex;
   justify-content: flex-end;
-}
-
-.no-action {
-  color: #c0c4cc;
 }
 </style>

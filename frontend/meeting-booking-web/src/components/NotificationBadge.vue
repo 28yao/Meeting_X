@@ -23,22 +23,32 @@ onMounted(() => {
 
 <style scoped>
 .notify-link {
-  color: #fff;
+  color: rgba(250, 249, 247, 0.88);
   text-decoration: none;
   font-size: 14px;
+  padding: 6px 10px;
+  border-radius: var(--app-radius-sm);
+  transition: background-color 0.2s ease, color 0.2s ease;
+  cursor: pointer;
 }
 
-.notify-link.router-link-active .notify-text {
+.notify-link:hover {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.notify-link.router-link-active {
   font-weight: 600;
-  text-decoration: underline;
+  color: #fff;
+  background: rgba(255, 255, 255, 0.14);
 }
 
 .notify-text {
   display: inline-block;
-  padding: 0 4px;
 }
 
 :deep(.el-badge__content) {
   border: none;
+  box-shadow: none;
 }
 </style>

@@ -1,6 +1,6 @@
 # 项目状态 — 企业级会议室预约系统
 
-| 更新日期 | 2026-05-20 |
+| 更新日期 | 2026-05-20（含 UI 主题追溯） |
 |----------|------------|
 | 文档依据 | `specs/spec.md` v1.0、`specs/plan.md` v1.0、`AGENTS.md` |
 
@@ -28,8 +28,8 @@
 
 | 阶段 | 说明 |
 |------|------|
-| **当前** | 一期 MVP 开发中 — 模块 1～6 已实现并可本地运行 |
-| **下一步** | 一期 P0 功能已全部完成；可选横切任务见 `specs/tasks.md` |
+| **当前** | 一期 MVP（模块 1～8）已实现并可本地运行；全站 UI 主题见 `iteration-ui-theme` |
+| **下一步** | 二期功能见 `docs/iterations/iteration-001/`；可选横切任务见 `specs/tasks.md` |
 
 ---
 
@@ -50,6 +50,13 @@
 | **模块 6** | 用户管理：`/admin/users` CRUD；新建默认密码/显示名；重置为 `123456`；`@PreAuthorize(ADMIN)` |
 | **模块 7** | 会议室管理：`/admin/rooms` CRUD + 维护状态；有未来预约禁止删除（40903） |
 | **模块 8** | 预约管理：`/admin/bookings` 列表/改约/取消；组织者通知 |
+
+### 4.1 横切迭代（非功能）
+
+| 迭代 | 内容 | 文档 | 状态 |
+|------|------|------|------|
+| **iteration-ui-theme** | 全站大地色系视觉：仅前端 CSS / Element 主题，不改 API、路由、业务逻辑 | [`docs/iterations/iteration-ui-theme/`](docs/iterations/iteration-ui-theme/spec.md) | 已完成（代码待提交） |
+| **iteration-001** | 二期小功能：注册、改密/改名、预约步骤合并、登录页文案等 | [`docs/iterations/iteration-001/`](docs/iterations/iteration-001/spec.md) | 部分进行中（见该目录 tasks） |
 
 ---
 
@@ -210,14 +217,14 @@
 
 | 类型 | 说明 | 处理建议 |
 |------|------|----------|
-| **进度** | 尚无代码仓库实现，全部功能为「未开始」 | 按 `tasks.md` 从脚手架模块顺序开发 |
+| **进度** | 一期 8 模块已落地；文档曾滞后，以本文 §4、§6 为准 | 二期见 `iteration-001/tasks.md` |
 | **待确认（spec §14）** | 以下在 plan 中已有 ADR 缺省，若业务方有不同意见需再对齐 | 见 `specs/spec.md` §14；实现以 plan ADR-01～04 为准 |
 | **并发抢订** | 两人同时预约同一时段只能一人成功 | 后端事务 + 重叠检测（plan §7.3） |
 | **环境** | 本地需 MySQL、JDK 8、Node.js；具体端口待脚手架完成后在 README 补充 | 开发脚手架任务完成后更新 README |
 
 ### Bug 列表
 
-当前无已记录 Bug（项目尚未进入编码与测试阶段）。
+当前无已记录 Bug。逻辑删除会议室等历史问题已在一期修复中闭合。
 
 ---
 
@@ -238,3 +245,5 @@
 | `specs/tasks.md` | 可执行的开发任务清单 |
 | `README.md` | 如何启动、测试、排错 |
 | `AGENTS.md` | AI/开发代码规范 |
+| `docs/iterations/iteration-ui-theme/` | 全站 UI 主题：spec、changelog、验收清单 |
+| `docs/iterations/iteration-001/` | 二期功能迭代：spec、plan、tasks |

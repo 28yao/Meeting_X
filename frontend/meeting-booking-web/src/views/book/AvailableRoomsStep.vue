@@ -41,28 +41,38 @@ const emit = defineEmits<{
 .room-card {
   margin-bottom: 16px;
   cursor: pointer;
-  transition: border-color 0.2s;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  border: 1px solid var(--app-border-light);
+}
+
+.room-card:hover {
+  box-shadow: var(--app-shadow-md);
+  border-color: var(--app-border);
 }
 
 .room-card--selected {
-  border: 2px solid #409eff;
+  border: 2px solid var(--app-primary);
+  box-shadow: var(--app-shadow-sm);
+  background: var(--app-surface-muted);
 }
 
 .room-name {
   font-size: 16px;
   font-weight: 600;
   margin-bottom: 8px;
+  color: var(--app-text);
 }
 
 .room-meta {
   font-size: 13px;
-  color: #606266;
+  color: var(--app-text-secondary);
   margin-bottom: 4px;
 }
 
 .room-equipment {
   font-size: 12px;
-  color: #909399;
+  color: var(--app-text-muted);
   margin-top: 8px;
+  line-height: 1.5;
 }
 </style>

@@ -32,6 +32,7 @@
 - 手机号/邮箱绑定
 - 个人头像上传
 - 多语言支持
+- **全站视觉主题统一**（大地色系、Element 主题覆盖等）— 见 [`docs/iterations/iteration-ui-theme/`](../iteration-ui-theme/spec.md)
 
 ---
 

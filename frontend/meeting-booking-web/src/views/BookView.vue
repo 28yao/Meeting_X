@@ -235,6 +235,7 @@ async function onSubmit() {
 
 .book-steps {
   margin-bottom: 32px;
+  padding: 8px 0;
 }
 
 .step-panel {
@@ -251,7 +252,7 @@ async function onSubmit() {
   display: flex;
   justify-content: center;
   gap: 12px;
-  padding-top: 16px;
-  border-top: 1px solid #ebeef5;
+  padding-top: 20px;
+  border-top: 1px solid var(--app-border-light);
 }
 </style>

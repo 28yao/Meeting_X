@@ -7,6 +7,7 @@ import App from './App.vue'
 import router from './router'
 import { setupRouterGuards } from './router/guards'
 import './style.css'
+import './styles/theme.css'
 
 const app = createApp(App)
 const pinia = createPinia()

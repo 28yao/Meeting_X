@@ -27,6 +27,6 @@ onMounted(async () => {
   align-items: center;
   justify-content: center;
   min-height: 60vh;
-  color: #606266;
+  color: var(--app-text-secondary);
 }
 </style>

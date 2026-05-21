@@ -131,17 +131,21 @@ async function onSubmit() {
   align-items: center;
   justify-content: center;
   min-height: 100vh;
-  background: linear-gradient(135deg, #e8f4ff 0%, #f5f7fa 100%);
+  padding: 24px;
+  background: var(--app-bg);
 }
 
 .register-card {
   width: 420px;
   max-width: 92vw;
+  border: 1px solid var(--app-border-light);
 }
 
 .register-title {
   font-size: 18px;
   font-weight: 600;
+  color: var(--app-text);
+  letter-spacing: -0.02em;
 }
 
 .register-error {
@@ -151,16 +155,19 @@ async function onSubmit() {
 .login-link {
   margin-top: 12px;
   font-size: 13px;
-  color: #909399;
+  color: var(--app-text-muted);
   text-align: center;
 }
 
 .login-link a {
-  color: #409eff;
+  color: var(--app-primary);
   text-decoration: none;
+  font-weight: 500;
+  transition: color 0.2s ease;
 }
 
 .login-link a:hover {
+  color: var(--app-primary-dark);
   text-decoration: underline;
 }
 </style>

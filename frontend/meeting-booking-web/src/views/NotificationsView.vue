@@ -120,9 +120,6 @@ onMounted(async () => {
 
 .page-title {
   margin: 0;
-  font-size: 20px;
-  font-weight: 600;
-  color: #303133;
 }
 
 .notify-list {
@@ -132,20 +129,23 @@ onMounted(async () => {
 }
 
 .notify-item {
-  padding: 12px 16px;
-  border-radius: 8px;
-  border: 1px solid #ebeef5;
+  padding: 14px 18px;
+  border-radius: var(--app-radius-sm);
+  border: 1px solid var(--app-border-light);
+  background: var(--app-surface);
   cursor: pointer;
-  transition: background 0.2s;
+  transition: background-color 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
 .notify-item.unread {
-  background: #ecf5ff;
-  border-color: #d9ecff;
+  background: var(--el-color-primary-light-9);
+  border-color: var(--el-color-primary-light-7);
+  box-shadow: var(--app-shadow-sm);
 }
 
 .notify-item:hover {
-  background: #f5f7fa;
+  background: var(--app-surface-muted);
+  border-color: var(--app-border);
 }
 
 .notify-item-header {
@@ -157,19 +157,19 @@ onMounted(async () => {
 
 .notify-title {
   font-weight: 600;
-  color: #303133;
+  color: var(--app-text);
   flex: 1;
 }
 
 .notify-content {
   margin: 0 0 8px;
   font-size: 14px;
-  color: #606266;
-  line-height: 1.5;
+  color: var(--app-text-secondary);
+  line-height: 1.6;
 }
 
 .notify-time {
   font-size: 12px;
-  color: #909399;
+  color: var(--app-text-muted);
 }
 </style>
