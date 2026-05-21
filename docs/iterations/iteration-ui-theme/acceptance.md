@@ -61,7 +61,7 @@
 - [x] `docs/iterations/iteration-ui-theme/changelog.md` 已创建
 - [x] `PROJECT_STATUS.md` §4.1 已添加索引
 - [x] `iteration-001/spec.md` §2.2 已注明不包含全站主题
-- [ ] `changelog.md`「关联提交」已填写 commit hash（待 Git 提交后补）
+- [x] `changelog.md`「关联提交」已填写 commit hash（`1d526de`）
 
 ---
 

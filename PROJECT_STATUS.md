@@ -55,7 +55,7 @@
 
 | 迭代 | 内容 | 文档 | 状态 |
 |------|------|------|------|
-| **iteration-ui-theme** | 全站大地色系视觉：仅前端 CSS / Element 主题，不改 API、路由、业务逻辑 | [`docs/iterations/iteration-ui-theme/`](docs/iterations/iteration-ui-theme/spec.md) | 已完成（代码待提交） |
+| **iteration-ui-theme** | 全站大地色系视觉：仅前端 CSS / Element 主题，不改 API、路由、业务逻辑 | [`docs/iterations/iteration-ui-theme/`](docs/iterations/iteration-ui-theme/spec.md) | 已完成（`1d526de`） |
 | **iteration-001** | 二期小功能：注册、改密/改名、预约步骤合并、登录页文案等 | [`docs/iterations/iteration-001/`](docs/iterations/iteration-001/spec.md) | 部分进行中（见该目录 tasks） |
 
 ---

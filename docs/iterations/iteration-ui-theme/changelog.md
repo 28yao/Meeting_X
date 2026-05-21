@@ -60,11 +60,9 @@ npm run build
 
 ### 关联提交
 
-> 待代码与本文档一并提交后，在此填写 Git commit hash，例如：`abc1234` — `style(web): earth-tone theme (iteration-ui-theme)`
-
 | 类型 | Commit | 说明 |
 |------|--------|------|
-| 代码 + 文档 | _待补_ | 建议 message：`style(web): earth-tone theme; docs(iteration-ui-theme)` |
+| 代码 + 文档 | `1d526de` | `style(web): 全站大地色 UI 主题（iteration-ui-theme）` |
 
 ---
 
