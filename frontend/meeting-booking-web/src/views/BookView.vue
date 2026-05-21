@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { computed, reactive, ref } from 'vue'
+import { computed, reactive, ref, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 import { getAvailableRooms, type MeetingRoom } from '../api/room'
 import { createBooking } from '../api/booking'
@@ -11,6 +11,7 @@ import ConfirmStep from './book/ConfirmStep.vue'
 const activeStep = ref(0)
 const loadingRooms = ref(false)
 const submitting = ref(false)
+const notificationStore = useNotificationStore()
 
 const form = reactive({
   date: '',
@@ -21,7 +22,6 @@ const form = reactive({
 const rooms = ref<MeetingRoom[]>([])
 const selectedRoom = ref<MeetingRoom | null>(null)
 const title = ref('')
-const notificationStore = useNotificationStore()
 
 const timeOptions = computed(() => {
   const options: string[] = []
@@ -56,46 +56,11 @@ function initDefaultDate() {
 
 initDefaultDate()
 
-function validateTimeStep(): boolean {
+async function loadRooms() {
   if (!form.date || !form.startTime || !form.endTime) {
-    ElMessage.warning('请选择日期与时段')
-    return false
-  }
-  if (form.startTime >= form.endTime) {
-    ElMessage.warning('结束时间必须晚于开始时间')
-    return false
-  }
-  return true
-}
-
-async function goNext() {
-  if (activeStep.value === 0) {
-    if (!validateTimeStep()) {
-      return
-    }
-    await loadRooms()
-    if (rooms.value.length === 0) {
-      return
-    }
-    activeStep.value = 1
+    rooms.value = []
     return
   }
-  if (activeStep.value === 1) {
-    if (!selectedRoom.value) {
-      ElMessage.warning('请选择一间会议室')
-      return
-    }
-    activeStep.value = 2
-  }
-}
-
-function goPrev() {
-  if (activeStep.value > 0) {
-    activeStep.value -= 1
-  }
-}
-
-async function loadRooms() {
   loadingRooms.value = true
   selectedRoom.value = null
   try {
@@ -106,9 +71,6 @@ async function loadRooms() {
       return
     }
     rooms.value = res.data || []
-    if (rooms.value.length === 0) {
-      ElMessage.info('该时段暂无空闲会议室，请调整时间')
-    }
   } catch (err) {
     ElMessage.error(resolveAxiosError(err))
     rooms.value = []
@@ -117,12 +79,48 @@ async function loadRooms() {
   }
 }
 
+// 自动加载：日期或时间变更时重新查询会议室
+watch(
+  () => [form.date, form.startTime, form.endTime],
+  () => {
+    loadRooms()
+  }
+)
+
 function onSelectRoom(room: MeetingRoom) {
   selectedRoom.value = room
 }
 
 function toDateTime(date: string, time: string): string {
   return `${date}T${time}:00`
+}
+
+function goNext() {
+  if (activeStep.value === 0) {
+    if (!form.date || !form.startTime || !form.endTime) {
+      ElMessage.warning('请选择日期与时段')
+      return
+    }
+    if (form.startTime >= form.endTime) {
+      ElMessage.warning('结束时间必须晚于开始时间')
+      return
+    }
+    if (!selectedRoom.value) {
+      ElMessage.warning('请选择一间会议室')
+      return
+    }
+    activeStep.value = 1
+    return
+  }
+  if (activeStep.value === 1) {
+    onSubmit()
+  }
+}
+
+function goPrev() {
+  if (activeStep.value > 0) {
+    activeStep.value -= 1
+  }
 }
 
 async function onSubmit() {
@@ -151,7 +149,7 @@ async function onSubmit() {
     activeStep.value = 0
     title.value = ''
     selectedRoom.value = null
-    await loadRooms()
+    loadRooms()
   } catch (err) {
     ElMessage.error(resolveAxiosError(err))
   } finally {
@@ -164,8 +162,7 @@ async function onSubmit() {
   <div class="book-view">
     <el-card shadow="never">
       <el-steps :active="activeStep" align-center finish-status="success" class="book-steps">
-        <el-step title="选择时间" />
-        <el-step title="选择会议室" />
+        <el-step title="选择时间与会议室" />
         <el-step title="确认预约" />
       </el-steps>
 
@@ -192,9 +189,9 @@ async function onSubmit() {
             </el-select>
           </el-form-item>
         </el-form>
-      </div>
 
-      <div v-show="activeStep === 1" class="step-panel">
+        <el-divider />
+
         <AvailableRoomsStep
           :rooms="rooms"
           :loading="loadingRooms"
@@ -203,7 +200,7 @@ async function onSubmit() {
         />
       </div>
 
-      <div v-show="activeStep === 2" class="step-panel">
+      <div v-show="activeStep === 1" class="step-panel">
         <ConfirmStep
           :date="form.date"
           :start-time="form.startTime"
@@ -216,9 +213,9 @@ async function onSubmit() {
 
       <div class="step-actions">
         <el-button v-if="activeStep > 0" @click="goPrev">上一步</el-button>
-        <el-button v-if="activeStep < 2" type="primary" @click="goNext">下一步</el-button>
+        <el-button v-if="activeStep < 1" type="primary" @click="goNext">下一步</el-button>
         <el-button
-          v-if="activeStep === 2"
+          v-if="activeStep === 1"
           type="primary"
           :loading="submitting"
           @click="onSubmit"
