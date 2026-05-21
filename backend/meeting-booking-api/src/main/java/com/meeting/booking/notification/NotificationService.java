@@ -2,6 +2,8 @@ package com.meeting.booking.notification;
 
 import com.meeting.booking.common.BusinessException;
 import com.meeting.booking.common.ErrorCodes;
+import com.meeting.booking.common.PagingDefaults;
+import com.meeting.booking.common.dto.PageResult;
 import com.meeting.booking.notification.dto.NotificationDto;
 import com.meeting.booking.notification.dto.UnreadCountDto;
 import com.meeting.booking.notification.entity.Notification;
@@ -32,20 +34,29 @@ public class NotificationService {
     }
 
     /**
-     * 查询当前用户全部通知（按时间降序）。
+     * 分页查询当前用户通知（按时间降序）。
      *
      * @param userId 用户 ID
-     * @return 通知 DTO 列表
+     * @param page   页码，从 1 开始
+     * @return 分页结果
      */
-    public List<NotificationDto> listByUser(Long userId) {
-        List<Notification> rows = notificationMapper.selectByUserId(userId);
-        if (rows == null || rows.isEmpty()) {
-            return Collections.emptyList();
+    public PageResult<NotificationDto> listByUser(Long userId, int page) {
+        int safePage = PagingDefaults.safePage(page);
+        long total = notificationMapper.countByUserId(userId);
+        int offset = (safePage - 1) * PagingDefaults.DEFAULT_PAGE_SIZE;
+        List<Notification> rows = notificationMapper.selectPageByUserId(
+                userId, PagingDefaults.DEFAULT_PAGE_SIZE, offset);
+        List<NotificationDto> items = new ArrayList<NotificationDto>();
+        if (rows != null) {
+            for (Notification row : rows) {
+                items.add(toDto(row));
+            }
         }
-        List<NotificationDto> result = new ArrayList<NotificationDto>();
-        for (Notification row : rows) {
-            result.add(toDto(row));
-        }
+        PageResult<NotificationDto> result = new PageResult<NotificationDto>();
+        result.setItems(items);
+        result.setPage(safePage);
+        result.setPageSize(PagingDefaults.DEFAULT_PAGE_SIZE);
+        result.setTotal(total);
         return result;
     }
 

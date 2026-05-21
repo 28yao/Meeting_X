@@ -16,8 +16,10 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.meeting.booking.common.dto.PageResult;
+import org.springframework.web.bind.annotation.RequestParam;
+
 import javax.validation.Valid;
-import java.util.List;
 
 /**
  * 管理员会议室管理 REST 接口（仅 ADMIN 角色可访问）。
@@ -37,13 +39,15 @@ public class AdminRoomController {
     }
 
     /**
-     * 查询会议室列表。
+     * 分页查询会议室列表。
      *
-     * @return 会议室列表
+     * @param page 页码，默认 1
+     * @return 分页结果
      */
     @GetMapping
-    public ApiResponse<List<MeetingRoomDto>> list() {
-        return ApiResponse.success(meetingRoomAdminService.listRooms());
+    public ApiResponse<PageResult<MeetingRoomDto>> list(
+            @RequestParam(defaultValue = "1") int page) {
+        return ApiResponse.success(meetingRoomAdminService.listRooms(page));
     }
 
     /**

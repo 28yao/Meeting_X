@@ -1,7 +1,7 @@
 package com.meeting.booking.booking;
 
 import com.meeting.booking.booking.dto.AdminBookingItemDto;
-import com.meeting.booking.booking.dto.PageResult;
+import com.meeting.booking.common.dto.PageResult;
 import com.meeting.booking.booking.dto.UpdateAdminBookingRequest;
 import com.meeting.booking.common.ApiResponse;
 import org.springframework.security.access.prepost.PreAuthorize;

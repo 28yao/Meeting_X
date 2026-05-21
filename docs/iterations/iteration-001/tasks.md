@@ -15,7 +15,8 @@
 |------|--------|----------|
 | 9. 登录页优化（注册 + 去除测试账号） | P0 | 已完成 |
 | 10. 员工自助信息修改 | P0 | 未开始 |
-| 11. 预约界面优化（时间与会议室合并） | P0 | 未开始 |
+| 11. 预约界面优化（时间与会议室合并） | P0 | 已完成 |
+| 12. 列表分页（通知 · 用户 · 会议室） | P0 | 已完成 |
 
 ---
 
@@ -272,12 +273,78 @@ UPDATE `sys_user.display_name` 或 `sys_user.password_hash`。
 
 ## 12. 当前状态
 
-**未开始。**
+**已完成。**
 
 | 项 | 说明 |
 |----|------|
 | 变更范围 | 仅前端 `BookView.vue`、`AvailableRoomsStep.vue` |
 | 失败层级 | 前端交互逻辑 |
+
+---
+
+# 模块 12：列表分页（通知 · 用户管理 · 会议室管理）
+
+## 1. 模块目标
+
+为通知中心、管理员用户列表、管理员会议室列表增加与「我的预约」一致的后端分页与前端翻页组件，避免一次加载全量数据。
+
+## 2. 用户可见内容
+
+- 三个页面底部在数据超过 20 条时出现翻页器（上一页 / 页码 / 下一页）。
+- 默认进入第 1 页；切换页码后列表刷新。
+
+## 3. 用户操作流程
+
+1. 打开通知中心 / 用户管理 / 会议室管理 → 看到第 1 页数据。
+2. 点击第 2 页 → 列表加载第 2 页内容。
+3. 在当前页完成删除或编辑 → 列表刷新，仍停留在当前页（若当前页为空且非第 1 页则回退一页）。
+
+## 4. 后端任务
+
+| ID | 任务 | 主文件 | 前置依赖 | 验收方式 | 状态 |
+|----|------|--------|----------|----------|------|
+| M12-B-01 | PageResult 迁至 common.dto | `common/dto/PageResult.java`；booking 改 import | 无 | 编译通过 | 已完成 |
+| M12-B-02 | PagingDefaults 工具 | `common/PagingDefaults.java` | M12-B-01 | page&lt;1 归 1 | 已完成 |
+| M12-B-03 | 通知列表分页 | NotificationMapper/Service/Controller | M12-B-01 | GET `?page=1` 返回 items+total | 已完成 |
+| M12-B-04 | 用户列表分页 | AdminUserService/Controller | M12-B-01 | GET `?page=1` 返回 PageResult | 已完成 |
+| M12-B-05 | 会议室列表分页 | MeetingRoomAdminService/Controller | M12-B-01 | GET `?page=1` 返回 PageResult | 已完成 |
+| M12-B-06 | 集成测试更新 | 三个 IntegrationTest | M12-B-03～05 | jsonPath 已改 | 已完成 |
+
+## 5. 前端任务
+
+| ID | 任务 | 主文件 | 前置依赖 | 验收方式 | 状态 |
+|----|------|--------|----------|----------|------|
+| M12-F-01 | API 传 page 参数 | `notification.ts`、`adminUser.ts`、`adminRoom.ts` | M12-B-03～05 | 请求带 `?page=` | 已完成 |
+| M12-F-02 | 通知中心分页 UI | `NotificationsView.vue` | M12-F-01 | 翻页可用 | 已完成 |
+| M12-F-03 | 用户管理分页 UI | `AdminUsersView.vue` | M12-F-01 | 翻页可用 | 已完成 |
+| M12-F-04 | 会议室管理分页 UI | `AdminRoomsView.vue` | M12-F-01 | 翻页可用 | 已完成 |
+
+## 6. 页面测试方法
+
+| 步骤 | 操作 | 预期结果 |
+|------|------|----------|
+| 1 | 通知超过 20 条时打开 `/notifications` | 底部出现分页，切换页码列表变化 |
+| 2 | 用户管理 `/admin/users` | 同上 |
+| 3 | 会议室管理 `/admin/rooms` | 同上 |
+| 4 | 通知「全部标为已读」 | 当前页刷新，未读角标更新 |
+
+## 7. 接口测试方法
+
+| 步骤 | 操作 | 预期结果 |
+|------|------|----------|
+| 1 | GET `/notifications?page=1` | `data.items` 数组，`data.pageSize`=20 |
+| 2 | GET `/admin/users?page=1` | 同上 |
+| 3 | GET `/admin/rooms` 无 page | 等同第 1 页 |
+
+## 8. 当前状态
+
+**已完成。**
+
+| 项 | 说明 |
+|----|------|
+| 依据 | `spec.md` §3.6、`plan.md` §9 |
+| 破坏性 | 三个列表 GET 的 `data` 结构变更，前后端须同版本发布 |
+| 备注 | 改约下拉使用 `listAllAdminRooms()` 合并多页；`GET /rooms` 仍返回全量列表 |
 
 ---
 
@@ -287,3 +354,4 @@ UPDATE `sys_user.display_name` 或 `sys_user.password_hash`。
 |------|------|------|
 | 1.0 | 2026-05-21 | 初版，依据二期迭代 spec/plan 拆分 |
 | 1.1 | 2026-05-21 | 新增模块 11 预约界面优化 |
+| 1.2 | 2026-05-20 | 新增模块 12 列表分页 |

@@ -2,7 +2,8 @@ package com.meeting.booking.booking;
 
 import com.meeting.booking.booking.dto.BookingMineRow;
 import com.meeting.booking.booking.dto.MyBookingItemDto;
-import com.meeting.booking.booking.dto.PageResult;
+import com.meeting.booking.common.PagingDefaults;
+import com.meeting.booking.common.dto.PageResult;
 import com.meeting.booking.booking.mapper.BookingMapper;
 import org.springframework.stereotype.Service;
 
@@ -21,7 +22,7 @@ import java.util.List;
 @Service
 public class BookingQueryService {
 
-    public static final int DEFAULT_PAGE_SIZE = 20;
+    public static final int DEFAULT_PAGE_SIZE = PagingDefaults.DEFAULT_PAGE_SIZE;
 
     private final BookingMapper bookingMapper;
 

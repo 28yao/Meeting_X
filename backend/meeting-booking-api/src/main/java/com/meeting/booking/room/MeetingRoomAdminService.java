@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.meeting.booking.booking.mapper.BookingMapper;
 import com.meeting.booking.common.BusinessException;
 import com.meeting.booking.common.ErrorCodes;
+import com.meeting.booking.common.PagingDefaults;
+import com.meeting.booking.common.dto.PageResult;
 import com.meeting.booking.room.dto.CreateAdminRoomRequest;
 import com.meeting.booking.room.dto.MeetingRoomDto;
 import com.meeting.booking.room.dto.UpdateAdminRoomRequest;
@@ -35,22 +37,31 @@ public class MeetingRoomAdminService {
     }
 
     /**
-     * 查询全部未删除会议室（按名称升序）。
+     * 查询全部未删除会议室（按名称升序），供下拉选择等场景使用。
      *
      * @return 会议室 DTO 列表
      */
-    public List<MeetingRoomDto> listRooms() {
+    public List<MeetingRoomDto> listAllRooms() {
         LambdaQueryWrapper<MeetingRoom> wrapper = new LambdaQueryWrapper<MeetingRoom>()
                 .orderByAsc(MeetingRoom::getName);
         List<MeetingRoom> rooms = meetingRoomMapper.selectList(wrapper);
-        if (rooms == null || rooms.isEmpty()) {
-            return Collections.emptyList();
+        List<MeetingRoomDto> all = new ArrayList<MeetingRoomDto>();
+        if (rooms != null) {
+            for (MeetingRoom room : rooms) {
+                all.add(toDto(room));
+            }
         }
-        List<MeetingRoomDto> result = new ArrayList<MeetingRoomDto>(rooms.size());
-        for (MeetingRoom room : rooms) {
-            result.add(toDto(room));
-        }
-        return result;
+        return all;
+    }
+
+    /**
+     * 分页查询未删除会议室列表（按名称升序）。
+     *
+     * @param page 页码，从 1 开始
+     * @return 分页结果
+     */
+    public PageResult<MeetingRoomDto> listRooms(int page) {
+        return PagingDefaults.slice(listAllRooms(), page);
     }
 
     /**

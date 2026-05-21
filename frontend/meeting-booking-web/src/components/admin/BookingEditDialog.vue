@@ -2,7 +2,7 @@
 import { computed, reactive, ref, watch } from 'vue'
 import { ElMessage } from 'element-plus'
 import type { FormInstance, FormRules } from 'element-plus'
-import { listAdminRooms, type AdminRoom } from '../../api/adminRoom'
+import { listAllAdminRooms, type AdminRoom } from '../../api/adminRoom'
 import type { AdminBookingItem, UpdateAdminBookingRequest } from '../../api/adminBooking'
 
 const props = defineProps<{
@@ -66,10 +66,7 @@ watch(
     form.date = start.date
     form.startTime = start.time
     form.endTime = end.time
-    const res = await listAdminRooms()
-    if (res.code === 0) {
-      rooms.value = res.data ?? []
-    }
+    rooms.value = await listAllAdminRooms()
     formRef.value?.clearValidate()
   },
 )

@@ -4,7 +4,7 @@ import com.meeting.booking.auth.LoginUserPrincipal;
 import com.meeting.booking.booking.dto.CreateBookingRequest;
 import com.meeting.booking.booking.dto.CreateBookingResponse;
 import com.meeting.booking.booking.dto.MyBookingItemDto;
-import com.meeting.booking.booking.dto.PageResult;
+import com.meeting.booking.common.dto.PageResult;
 import com.meeting.booking.common.ApiResponse;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;

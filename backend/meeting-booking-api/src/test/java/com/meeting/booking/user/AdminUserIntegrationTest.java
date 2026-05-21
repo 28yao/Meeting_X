@@ -156,7 +156,7 @@ class AdminUserIntegrationTest {
         mockMvc.perform(get("/admin/users")
                         .header("Authorization", "Bearer " + adminToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data").isArray());
+                .andExpect(jsonPath("$.data.items").isArray());
     }
 
     private String loginAs(String username, String password) throws Exception {

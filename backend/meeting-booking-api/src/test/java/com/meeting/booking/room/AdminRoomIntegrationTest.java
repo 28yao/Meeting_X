@@ -90,7 +90,8 @@ class AdminRoomIntegrationTest {
                         .header("Authorization", "Bearer " + adminToken))
                 .andExpect(status().isOk())
                 .andReturn();
-        JsonNode rooms = objectMapper.readTree(listResult.getResponse().getContentAsString()).get("data");
+        JsonNode rooms = objectMapper.readTree(listResult.getResponse().getContentAsString())
+                .get("data").get("items");
         long roomId = rooms.get(0).get("id").asLong();
 
         LocalDateTime start = BookingTestSlots.nextStart();
@@ -126,7 +127,7 @@ class AdminRoomIntegrationTest {
         mockMvc.perform(get("/admin/rooms")
                         .header("Authorization", "Bearer " + adminToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data").isArray());
+                .andExpect(jsonPath("$.data.items").isArray());
     }
 
     private String loginAsEmployee() throws Exception {

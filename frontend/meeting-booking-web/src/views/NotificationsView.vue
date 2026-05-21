@@ -13,22 +13,38 @@ import { formatDateTime } from '../utils/bookingStatus'
 
 const loading = ref(false)
 const items = ref<NotificationItem[]>([])
+const page = ref(1)
+const pageSize = ref(20)
+const total = ref(0)
 const notificationStore = useNotificationStore()
 
 async function loadList() {
   loading.value = true
   try {
-    const res = await listNotifications()
+    const res = await listNotifications(page.value)
     if (res.code !== 0) {
       ElMessage.error(res.message || '加载失败')
       return
     }
-    items.value = res.data ?? []
+    items.value = res.data?.items ?? []
+    pageSize.value = res.data?.pageSize ?? 20
+    total.value = res.data?.total ?? 0
+    if (items.value.length === 0 && page.value > 1) {
+      page.value--
+      loading.value = false
+      await loadList()
+      return
+    }
   } catch (err) {
     ElMessage.error(resolveAxiosError(err))
   } finally {
     loading.value = false
   }
+}
+
+function onPageChange(newPage: number) {
+  page.value = newPage
+  loadList()
 }
 
 async function onItemClick(item: NotificationItem) {
@@ -100,6 +116,16 @@ onMounted(async () => {
           <p class="notify-content">{{ item.content }}</p>
           <span class="notify-time">{{ formatDateTime(item.createdAt) }}</span>
         </div>
+      </div>
+      <div v-if="total > pageSize" class="pager">
+        <el-pagination
+          background
+          layout="prev, pager, next"
+          :current-page="page"
+          :page-size="pageSize"
+          :total="total"
+          @current-change="onPageChange"
+        />
       </div>
     </el-card>
   </div>

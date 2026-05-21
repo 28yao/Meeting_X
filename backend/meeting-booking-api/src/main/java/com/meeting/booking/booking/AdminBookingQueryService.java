@@ -2,7 +2,7 @@ package com.meeting.booking.booking;
 
 import com.meeting.booking.booking.dto.AdminBookingItemDto;
 import com.meeting.booking.booking.dto.AdminBookingRow;
-import com.meeting.booking.booking.dto.PageResult;
+import com.meeting.booking.common.dto.PageResult;
 import com.meeting.booking.booking.mapper.BookingMapper;
 import org.springframework.stereotype.Service;
 

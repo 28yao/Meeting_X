@@ -1,6 +1,6 @@
 # 企业级会议室预约系统 — 二期迭代技术方案
 
-| 文档版本 | 1.0 |
+| 文档版本 | 1.2 |
 |----------|------|
 | 依据文档 | `specs/spec.md`、`specs/plan.md`、`docs/iterations/iteration-001/spec.md` |
 | 目标读者 | 开发、测试、任务拆分、代码生成 Agent |
@@ -28,7 +28,39 @@
 | PUT | `/auth/profile` | 登录用户 | 修改当前用户的显示姓名 |
 | POST | `/auth/change-password` | 登录用户 | 修改当前用户的登录密码 |
 
-### 2.2 接口详情
+### 2.2 列表接口分页（破坏性变更）
+
+以下接口 `GET` 的 `data` 由 **数组** 改为 **分页对象** `PageResult<T>`（字段：`items`、`page`、`pageSize`、`total`）。
+
+| 方法 | 路径 | 角色 | 查询参数 | 说明 |
+|------|------|------|----------|------|
+| GET | `/notifications` | 登录用户 | `page`（默认 1） | 当前用户通知，按创建时间降序 |
+| GET | `/admin/users` | ADMIN | `page`（默认 1） | 用户列表，按 ID 升序 |
+| GET | `/admin/rooms` | ADMIN | `page`（默认 1） | 会议室列表，按名称升序 |
+
+**分页常量**（与 `BookingQueryService.DEFAULT_PAGE_SIZE` 一致）：
+
+- `page`：从 1 开始，小于 1 按 1 处理
+- `pageSize`：固定 20
+
+**响应示例**（以通知为例）：
+
+```json
+{
+  "code": 0,
+  "message": "success",
+  "data": {
+    "items": [{ "id": 1, "title": "预约成功", "read": false }],
+    "page": 1,
+    "pageSize": 20,
+    "total": 3
+  }
+}
+```
+
+**公共类型**：将 `booking.dto.PageResult` 迁至 `common.dto.PageResult`，供通知、用户、会议室、预约模块共用。
+
+### 2.3 接口详情（认证）
 
 #### POST /auth/register
 
@@ -248,6 +280,9 @@
 | 选择时段后立即展示可用会议室 | 同一页面中时间选择器下方出现房间列表 |
 | 变更时间后列表自动刷新 | 无需点击「下一步」，房间列表随时间选择变化 |
 | 选中房间后进入确认步骤 | 选中房间后点下一步到达确认页 |
+| GET `/notifications?page=1` | `data.items` 为数组，`data.total` 为总数 |
+| GET `/admin/users?page=2` | 第二页用户列表 |
+| GET `/admin/rooms` 缺省 page | 等同 `page=1` |
 
 ---
 
@@ -311,9 +346,48 @@ goNext(step0): selectedRoom check → activeStep=1
 
 ---
 
-## 9. 修订记录
+## 9. 列表分页（通知 · 用户 · 会议室）
+
+### 9.1 后端改动
+
+| 文件 | 改动 |
+|------|------|
+| `common/dto/PageResult.java` | 从 `booking.dto` 迁入（booking 模块改 import） |
+| `common/PagingDefaults.java` | `DEFAULT_PAGE_SIZE = 20`、`safePage(int)` |
+| `notification/mapper/NotificationMapper.java` | 新增 `countByUserId`、`selectPageByUserId`（LIMIT/OFFSET） |
+| `notification/NotificationService.java` | `listByUser(userId, page)` 返回 `PageResult` |
+| `notification/NotificationController.java` | `GET` 增加 `@RequestParam page` |
+| `user/AdminUserService.java` | `listUsers(page)` 使用 MyBatis-Plus `Page` |
+| `user/AdminUserController.java` | 返回 `PageResult<AdminUserDto>` |
+| `room/MeetingRoomAdminService.java` | `listRooms(page)` 使用 MyBatis-Plus `Page` |
+| `room/AdminRoomController.java` | 返回 `PageResult<MeetingRoomDto>` |
+
+### 9.2 前端改动
+
+| 文件 | 改动 |
+|------|------|
+| `src/types/paging.ts` | 公共 `PageResult<T>` 类型（可选，或继续从 `api/booking` 导出） |
+| `src/api/notification.ts` | `listNotifications(page)` |
+| `src/api/adminUser.ts` | `listAdminUsers(page)` |
+| `src/api/adminRoom.ts` | `listAdminRooms(page)` |
+| `src/views/NotificationsView.vue` | 分页状态 + `el-pagination` |
+| `src/views/admin/AdminUsersView.vue` | 同上 |
+| `src/views/admin/AdminRoomsView.vue` | 同上 |
+
+### 9.3 测试改动
+
+| 文件 | 改动 |
+|------|------|
+| `NotificationIntegrationTest.java` | `$.data[0]` → `$.data.items[0]` |
+| `AdminUserIntegrationTest.java` | `$.data` isArray → `$.data.items` isArray |
+| `AdminRoomIntegrationTest.java` | 同上；`cannotDeleteRoomWithFutureBooking` 取 `data.items[0]` |
+
+---
+
+## 10. 修订记录
 
 | 版本 | 日期 | 说明 |
 |------|------|------|
 | 1.0 | 2026-05-21 | 初版 |
 | 1.1 | 2026-05-21 | 新增 §8 预约界面优化（时间与会议室选择合并） |
+| 1.2 | 2026-05-20 | 新增 §2.2、§9 列表分页；`PageResult` 迁至 common |

@@ -1,5 +1,6 @@
 import http from './http'
 import type { ApiResponse } from '../types/api'
+import type { PageResult } from '../types/paging'
 
 export interface NotificationItem {
   id: number
@@ -15,8 +16,12 @@ export interface UnreadCountResult {
   count: number
 }
 
-export async function listNotifications(): Promise<ApiResponse<NotificationItem[]>> {
-  const res = await http.get<ApiResponse<NotificationItem[]>>('/notifications')
+export async function listNotifications(
+  page = 1,
+): Promise<ApiResponse<PageResult<NotificationItem>>> {
+  const res = await http.get<ApiResponse<PageResult<NotificationItem>>>('/notifications', {
+    params: { page },
+  })
   return res.data
 }
 

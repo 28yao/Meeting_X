@@ -1,9 +1,9 @@
-package com.meeting.booking.booking.dto;
+package com.meeting.booking.common.dto;
 
 import java.util.List;
 
 /**
- * 分页结果封装。
+ * 分页结果封装，供列表类接口统一返回结构。
  *
  * @author liuxinsi
  * @date 2026-05-20

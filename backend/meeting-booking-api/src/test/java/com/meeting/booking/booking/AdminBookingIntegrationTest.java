@@ -139,7 +139,7 @@ class AdminBookingIntegrationTest {
                 .andExpect(status().isOk())
                 .andReturn();
         return objectMapper.readTree(rooms.getResponse().getContentAsString())
-                .get("data").get(0).get("id").asLong();
+                .get("data").get("items").get(0).get("id").asLong();
     }
 
     private String loginAsEmployee() throws Exception {

@@ -45,7 +45,7 @@ public class RoomController {
     @GetMapping
     @PreAuthorize("hasRole('ADMIN')")
     public ApiResponse<List<MeetingRoomDto>> listAll() {
-        return ApiResponse.success(meetingRoomAdminService.listRooms());
+        return ApiResponse.success(meetingRoomAdminService.listAllRooms());
     }
 
     /**

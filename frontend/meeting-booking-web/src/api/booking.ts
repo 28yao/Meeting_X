@@ -35,12 +35,8 @@ export interface MyBookingItem {
   cancellable: boolean
 }
 
-export interface PageResult<T> {
-  items: T[]
-  page: number
-  pageSize: number
-  total: number
-}
+export type { PageResult } from '../types/paging'
+import type { PageResult } from '../types/paging'
 
 export async function listMyBookings(
   page = 1,

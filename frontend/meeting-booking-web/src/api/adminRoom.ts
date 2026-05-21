@@ -1,5 +1,6 @@
 import http from './http'
 import type { ApiResponse } from '../types/api'
+import type { PageResult } from '../types/paging'
 
 export interface AdminRoom {
   id: number
@@ -27,9 +28,30 @@ export interface UpdateAdminRoomRequest {
   equipment?: string
 }
 
-export async function listAdminRooms(): Promise<ApiResponse<AdminRoom[]>> {
-  const res = await http.get<ApiResponse<AdminRoom[]>>('/admin/rooms')
+export async function listAdminRooms(page = 1): Promise<ApiResponse<PageResult<AdminRoom>>> {
+  const res = await http.get<ApiResponse<PageResult<AdminRoom>>>('/admin/rooms', {
+    params: { page },
+  })
   return res.data
+}
+
+/** 合并各页结果，供改约下拉等需要全量会议室的场景 */
+export async function listAllAdminRooms(): Promise<AdminRoom[]> {
+  const first = await listAdminRooms(1)
+  if (first.code !== 0 || !first.data) {
+    return []
+  }
+  const all = [...first.data.items]
+  const totalPages = Math.ceil(first.data.total / first.data.pageSize)
+  let p = 2
+  while (p <= totalPages) {
+    const res = await listAdminRooms(p)
+    if (res.code === 0 && res.data) {
+      all.push(...res.data.items)
+    }
+    p++
+  }
+  return all
 }
 
 export async function createAdminRoom(

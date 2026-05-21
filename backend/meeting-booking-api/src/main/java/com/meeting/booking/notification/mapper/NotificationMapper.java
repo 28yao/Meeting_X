@@ -30,6 +30,32 @@ public interface NotificationMapper extends BaseMapper<Notification> {
     List<Notification> selectByUserId(@Param("userId") Long userId);
 
     /**
+     * 统计用户通知总数。
+     *
+     * @param userId 用户 ID
+     * @return 通知条数
+     */
+    @Select("SELECT COUNT(1) FROM notification WHERE user_id = #{userId}")
+    long countByUserId(@Param("userId") Long userId);
+
+    /**
+     * 分页查询用户通知（按创建时间降序）。
+     *
+     * @param userId 用户 ID
+     * @param limit  每页条数
+     * @param offset 偏移量
+     * @return 当前页通知列表
+     */
+    @Select("SELECT id, user_id AS userId, type, title, content, related_booking_id AS relatedBookingId, "
+            + "read_flag AS readFlag, created_at AS createdAt "
+            + "FROM notification WHERE user_id = #{userId} ORDER BY created_at DESC "
+            + "LIMIT #{limit} OFFSET #{offset}")
+    List<Notification> selectPageByUserId(
+            @Param("userId") Long userId,
+            @Param("limit") int limit,
+            @Param("offset") int offset);
+
+    /**
      * 统计用户未读通知数量。
      *
      * @param userId 用户 ID

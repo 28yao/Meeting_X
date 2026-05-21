@@ -64,12 +64,12 @@ class NotificationIntegrationTest {
         MvcResult listResult = mockMvc.perform(get("/notifications")
                         .header("Authorization", "Bearer " + token))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data[0].title").value("预约成功"))
+                .andExpect(jsonPath("$.data.items[0].title").value("预约成功"))
                 .andReturn();
         JsonNode listRoot = new ObjectMapper()
                 .readTree(listResult.getResponse().getContentAsString());
-        long notificationId = listRoot.get("data").get(0).get("id").asLong();
-        assertTrue(!listRoot.get("data").get(0).get("read").asBoolean());
+        long notificationId = listRoot.get("data").get("items").get(0).get("id").asLong();
+        assertTrue(!listRoot.get("data").get("items").get(0).get("read").asBoolean());
 
         mockMvc.perform(post("/notifications/" + notificationId + "/read")
                         .header("Authorization", "Bearer " + token))

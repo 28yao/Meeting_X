@@ -1,5 +1,6 @@
 import http from './http'
 import type { ApiResponse } from '../types/api'
+import type { PageResult } from '../types/paging'
 
 export interface AdminUser {
   id: number
@@ -21,8 +22,10 @@ export interface UpdateAdminUserRequest {
   enabled?: boolean
 }
 
-export async function listAdminUsers(): Promise<ApiResponse<AdminUser[]>> {
-  const res = await http.get<ApiResponse<AdminUser[]>>('/admin/users')
+export async function listAdminUsers(page = 1): Promise<ApiResponse<PageResult<AdminUser>>> {
+  const res = await http.get<ApiResponse<PageResult<AdminUser>>>('/admin/users', {
+    params: { page },
+  })
   return res.data
 }
 

@@ -4,6 +4,8 @@ import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.meeting.booking.booking.mapper.BookingMapper;
 import com.meeting.booking.common.BusinessException;
 import com.meeting.booking.common.ErrorCodes;
+import com.meeting.booking.common.PagingDefaults;
+import com.meeting.booking.common.dto.PageResult;
 import com.meeting.booking.notification.entity.Notification;
 import com.meeting.booking.notification.mapper.NotificationMapper;
 import com.meeting.booking.user.dto.AdminUserDto;
@@ -48,22 +50,22 @@ public class AdminUserService {
     }
 
     /**
-     * 查询全部用户（按 ID 升序）。
+     * 分页查询用户列表（按 ID 升序）。
      *
-     * @return 用户 DTO 列表
+     * @param page 页码，从 1 开始
+     * @return 分页结果
      */
-    public List<AdminUserDto> listUsers() {
+    public PageResult<AdminUserDto> listUsers(int page) {
         LambdaQueryWrapper<SysUser> wrapper = new LambdaQueryWrapper<SysUser>()
                 .orderByAsc(SysUser::getId);
         List<SysUser> users = sysUserMapper.selectList(wrapper);
-        if (users == null || users.isEmpty()) {
-            return Collections.emptyList();
+        List<AdminUserDto> all = new ArrayList<AdminUserDto>();
+        if (users != null) {
+            for (SysUser user : users) {
+                all.add(toDto(user));
+            }
         }
-        List<AdminUserDto> result = new ArrayList<AdminUserDto>();
-        for (SysUser user : users) {
-            result.add(toDto(user));
-        }
-        return result;
+        return PagingDefaults.slice(all, page);
     }
 
     /**
